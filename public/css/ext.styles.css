@@ -1,0 +1,109 @@
+@font-face {
+  font-family: "Barlow";
+  src: url('../fonts/Barlow-Regular.ttf');
+}
+
+body {
+    background-color:#333;
+    color: #fff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+#particles-js {
+	height: 100vh;
+	width: 100%;
+    position: fixed;
+    z-index: -1;
+}
+
+.login-box{
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  margin-top: 90px;
+  background-color: rgba(0, 0, 0, .35);
+  backdrop-filter: blur(5px);
+}
+
+.right-login-box{
+  background-image: url('../img/left-login-box-bg.png');
+  background-position: right;
+  background-repeat: no-repeat;
+}
+
+.left-login-box{
+  padding-top: 50px;
+  -webkit-border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;  min-height: 70vh;
+  text-align:center;
+  background-color: rgba(255, 255, 255, 1);
+  overflow: hidden !important;
+}
+.left-login-box > section{
+  position:relative;
+}
+
+
+/*
+----------------------------------------------------------------------------------------------
+ESTILOS WEBSITE
+----------------------------------------------------------------------------------------------
+*/
+.nav-top-menu{
+  background-color: rgba(0, 0, 0, .73);
+  /* backdrop-filter: blur(2px); */
+  z-index: 999;
+}
+.nav-top-menu li.nav-item{
+  font-size:15px;
+  margin-right:4px;
+  transition: all .9s ease-out;
+  border-radius: 5px;
+}
+.nav-top-menu a.nav-link{
+  transition: all .7s ease-out;
+}
+
+.nav-top-menu li:hover{
+  background-color: #fff;
+}
+
+.nav-top-menu li.active{
+  background-color: #fff;
+  color: #0D4A9A !important
+}
+
+.nav-top-menu li:hover > .nav-link{
+  color:#0D4A9A !important;
+}
+
+.nav-top-menu li.active > .nav-link{
+  color:#0D4A9A !important;
+}
+
+.navbar-brand-centered {
+  position: absolute;
+  left: 47%;
+  top:-5px;
+  display: block;
+  text-align: center;
+  background-color: transparent;
+}
+
+.box-user-menu{
+background-color:#454b51;
+color: #fff;
+text-align: justify
+}
+.box-user-menu a {
+color:#fff;
+}
+.box-user-menu a:hover {
+background-color:#565c62;
+color:#222;
+}
