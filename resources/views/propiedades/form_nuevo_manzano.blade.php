@@ -7,7 +7,7 @@
 	<h3 class="title-header" style="text-transform: uppercase;">
 		<i class="fa fa-plus"></i>
 		{{$titulo}}
-		<a title="Volver a lista de urbanizaciones" class="btn btn-sm btn-secondary float-right" data-placement="top" style="margin-left:10px;" href="#"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
+		<a title="Volver a lista de urbanizaciones" class="btn btn-sm btn-secondary float-right" data-placement="top" style="margin-left:10px;" href="{{url('urbanizaciones/'.Crypt::encryptString($urbanizacion->urb_id))}}"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
 	</h3>
 
 	<div class="row">

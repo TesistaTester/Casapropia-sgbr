@@ -210,7 +210,7 @@
 																<span class="text-danger">*</span>
 																<i class="fa fa-question-circle float-right" title="Establecer la fecha de nacimiento de la persona"></i>
 															</label>
-														<input required type="date" value="{{old('per_fecha_nacimiento', $persona->per_fecha_nacimiento)}}" class="form-control @error('per_fecha_nacimiento') is-invalid @enderror" name="per_fecha_nacimiento" id="per_fecha_nacimiento" placeholder="Fecha de nacimiento">
+														<input required type="date" min="{{intval(date('Y'))-$max_edad_cliente}}-01-01" max="{{intval(date('Y'))-$min_edad_cliente}}-01-01" value="{{old('per_fecha_nacimiento', $persona->per_fecha_nacimiento)}}" class="form-control @error('per_fecha_nacimiento') is-invalid @enderror" name="per_fecha_nacimiento" id="per_fecha_nacimiento" placeholder="Fecha de nacimiento">
 														@error('per_fecha_nacimiento')
 														<div class="invalid-feedback">
 															{{$message}}

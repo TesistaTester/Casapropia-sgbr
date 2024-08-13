@@ -18,7 +18,13 @@ class Reserva extends Model
     public function persona(){
         return $this->belongsTo(Persona::class, 'per_id');
     }
+
     public function descargo(){
         return $this->hasOne(DescargoReserva::class, 'res_id');
     }
+
+    public function propiedad(){
+        return $this->belongsTo(Propiedad::class, 'pro_id');
+    }
+
 }

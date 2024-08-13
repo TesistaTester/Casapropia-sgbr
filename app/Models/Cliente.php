@@ -52,7 +52,7 @@ class Cliente extends Model
     public function contratos(){
         return collect();
     }
-    //metodo para verificar la existencia de un propietario legal en bd
+    //metodo para verificar la existencia de un cliente registrado
     public static function existe_cliente_por_nro_documento($x){
         $cliente = DB::table('cliente')
                                 ->join('persona','cliente.per_id' ,'=', 'persona.per_id')

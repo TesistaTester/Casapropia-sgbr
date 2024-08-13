@@ -44,48 +44,51 @@
                         <img style="height:55px;" src="{{ asset('img/logo_casa_propia-white.png')}}" alt="..." class="">
                     </a>
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">
+                        <li class="nav-item @if($modulo_activo == 'dashboard'): active @endif">
+                            <a class="nav-link" href="{{url('inicio')}}">
                                 <i class="fa fa-home"></i> INICIO <span class="sr-only">(current)</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" data-toggle="modal" data-target="#modal-guia-usuario" href="#">
                                 <i class="fa fa-book"></i> GUIA DE USUARIO</span>
                             </a>
                         </li>
-                        <!-- <li class="nav-item dropdown">
-                             <a id="btn-menu-modulos" class="nav-link" href="#" data-toggle="dropdown" data-target="#menu_principal">
-                                 <i class="fa fa-th"></i>
-                                 MODULOS
-                             </a>
-                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                 <a class="dropdown-item" href="#"><i class="fa fa-map"></i> ADMINISTRACIÓN DE PROPIEDADES</a>
-                                 <a class="dropdown-item" href="#"><i class="fa fa-bookmark"></i> ADMINISTRACIÓN DE VENTAS</a>
-                                 <a class="dropdown-item" href="#"><i class="fa fa-file"></i> ADMINISTRACIÓN DE CONTRATOS</a>
-                                 <a class="dropdown-item" href="#"><i class="fa fa-user"></i> ADMINISTRACIÓN DE USUARIOS</a>
-                                 <a class="dropdown-item" href="#"><i class="fa fa-line-chart"></i> ADMINISTRACIÓN DE REPORTES</a>
-                             </div>
-                         </li> -->
                     </ul>
                     <div class="btn-group">
                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user"></i>
-                            Cuenta de usuario
+                            @if(Auth::user()->persona == null)
+                            ADMIN::{{session('rol_nombre')}}
+                            @else
+                            {{Auth::user()->persona->per_nombres}}::{{session('rol_nombre')}}
+                            @endif
+
                         </button>
                         <div class="dropdown-menu dropdown-menu-right dropdown-user-profile" style="padding:0 !important;">
                             <div class="card card-user">
-                                <img style="width:60%; margin:10px auto 0 auto;" class="rounded-circle" src="{{ asset('img/default.jpg')}}" alt="Foto de perfil">
                                 <div class="card-body text-center" style="padding:10px;">
-                                    <h4 class="text-white">JOSE MARIA
-                                        <br><small>RIVERO LOPEZ</small>
-                                        <br><small class="text-uppercase text-success" style="font-size:0.6em;">PROPIETARIO</small>
-                                    </h4>
                                     <div class="box-user-menu">
-                                        <a href="#" class="dropdown-item"><i class="fa fa-user"></i> Ver perfil</a>
-                                        <a href="#" class="dropdown-item"><i class="fa fa-lock"></i> Actualizar password</a>
-                                        <a href="#" class="dropdown-item"><i class="fa fa-random"></i> Cambiar rol</a>
-                                        <a href="#" class="dropdown-item"><i class="fa fa-sign-out"></i> Cerrar sesión</a>
+                                        <div class="text-center">
+                                            <img style="width:40%; margin:10px auto 0 auto;" class="rounded-circle" src="{{asset('storage/'.Auth::user()->usu_foto)}}" alt="Foto de perfil">
+                                            <h4 class="text-white">
+                                                @if(Auth::user()->persona == null)
+                                                ADMINISTRADOR
+                                                @else
+                                                {{Auth::user()->persona->per_nombres}} 
+                                                <br><small>{{Auth::user()->persona->per_primer_apellido}} {{Auth::user()->persona->per_segundo_apellido}}</small>
+                                                @endif
+                                                <br>
+                                                <small class="text-uppercase text-success" style="font-size:0.6em;">ROL: {{session('rol_nombre')}}</small>
+                                            </h4>
+                                        </div>
+                                        <hr>
+                        
+                                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-cuenta"><i class="fa fa-user"></i> Ver perfil</a>
+                                        @if(count(Auth::user()->roles_usuario) > 1)
+                                        <a href="{{url('role_selector')}}" class="dropdown-item"><i class="fa fa-random"></i> Cambiar rol</a>
+                                        @endif
+                                        <a href="{{url('logout')}}" class="dropdown-item"><i class="fa fa-sign-out"></i> Cerrar sesión</a>
                                     </div>
                                 </div>
                             </div>
@@ -101,24 +104,32 @@
         {{-- MENU CONTEXTUAL --}}
         <div class="col-md-2 nav-contextual-container">
             <div class="nav-contextual">
-                <div class="text-center">
-                    <img style="width:50%; margin:10px auto 0 auto;" class="rounded-circle" src="{{ asset('img/default.jpg')}}" alt="Foto de perfil">
-                    <h4 class="text-white">JOSE MARIA
-                        <br><small>RIVERO LOPEZ</small>
+                {{-- <div class="text-center">
+                    <img style="width:40%; margin:10px auto 0 auto;" class="rounded-circle" src="{{asset('storage/'.Auth::user()->usu_foto)}}" alt="Foto de perfil">
+                    <h4 class="text-white">
+                        @if(Auth::user()->persona == null)
+                        ADMINISTRADOR
+                        @else
+                        {{Auth::user()->persona->per_nombres}} 
+                        <br><small>{{Auth::user()->persona->per_primer_apellido}} {{Auth::user()->persona->per_segundo_apellido}}</small>
+                        @endif
                         <br><small class="text-uppercase text-success" style="font-size:0.6em;">superadmin</small>
                     </h4>
                 </div>
-                <hr>
+                <hr> --}}
                     <h4 class="text-center text-white" style="text-transform: uppercase;">
                         <small>- MODULOS -</small>
                     </h4>
                     <nav class="nav nav-pills" aria-orientation="vertical">
+                        {{-- @if(session('rol_id') == 3) --}}
                         <a class="nav-item nav-link @if($modulo_activo == 'urbanizaciones'): active @endif" href="{{url('urbanizaciones')}}"><i class="fa fa-building"></i> URBANIZACIONES</a>
+                        {{-- @endif --}}
                         <a class="nav-item nav-link @if($modulo_activo == 'propietarios'): active @endif" href="{{url('propietarios')}}"><i class="fa fa-key"></i> PROPIETARIOS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'clientes'): active @endif" href="{{url('clientes')}}"><i class="fa fa-id-card"></i> CLIENTES</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'reservas'): active @endif" href="{{url('reservas')}}"><i class="fa fa-tag"></i> RESERVAS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'contratos'): active @endif" href="{{url('contratos')}}"><i class="fa fa-file"></i> CONTRATOS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'usuarios'): active @endif" href="{{url('usuarios')}}"><i class="fa fa-users"></i> USUARIOS</a>
+                        <a class="nav-item nav-link @if($modulo_activo == 'reportes'): active @endif" href="{{url('reportes')}}"><i class="fa fa-line-chart"></i> REPORTES</a>
                     </nav>
     
                 <div class="box-copyright">
@@ -137,11 +148,234 @@
     {{-- CONTENEDOR PRINCIPAL (FIN) --}}
 
 
+{{-- INICIO MODAL: GUIA DE USUARIO --}}
+<div class="modal fade" id="modal-guia-usuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-book"></i>
+              Guia de usuario
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe class="pdf" 
+            src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210101201653/PDF.pdf" style="width:100%; height:500px;">
+            </iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: GUIA DE USUARIO --}}
+
+  {{-- INICIO MODAL: CUENTA_USUARIO --}}
+<div class="modal fade" id="modal-cuenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-user"></i>
+              Perfil de usuario
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="box-data-xtra">
+                <div class="row">
+                    <div class="col-md-6 text-success text-right">
+                        USUARIO: 
+                    </div>
+                    <div class="col-md-6">
+                        {{Auth::user()->usu_email}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-success text-right">
+                        NOMBRES:
+                    </div>
+                    <div class="col-md-6">
+                        @if(Auth::user()->persona == null)
+                        ADMINISTRADOR
+                        @else
+                        {{Auth::user()->persona->per_nombres}} {{Auth::user()->persona->per_primer_apellido}} {{Auth::user()->persona->per_segundo_apellido}}
+                        @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-success text-right">
+                        ROLES ASIGNADOS:
+                    </div>
+                    <div class="col-md-6">
+                        @foreach (Auth::user()->roles_usuario as $item)
+                            - {{$item->rol->rol_nombre}}<br>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-success text-right">
+                        ROL ACTUAL:
+                    </div>
+                    <div class="col-md-6">
+                        <div class="badge badge-success">
+                        {{session('rol_nombre')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-success text-right">
+                        ACTUALIZADO:
+                    </div>
+                    <div class="col-md-6">
+                        {{Auth::user()->updated_at}}
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <a id="btn-update-password" class="btn btn-success btn-block" href="#">
+                        <i class="fa fa-refresh"></i>
+                        Actualizar contraseña
+                    </a>
+
+                    <form id="form-update-password" action="" method="POST">
+                        @csrf
+                        <a id="btn-back-update-password" class="btn btn-sm btn-secondary" style="float:right;" href="#">Atrás</a>
+                        <h5 class="text-success">ACTUALIZAR CONTRASEÑA</h5>
+                        <small>
+                            Los campos marcados con <span class="text-danger">*</span> son obligatorios
+                        </small>
+						<div class="form-group">
+							<label class="label-blue label-block" for="">
+								Contraseña actual:
+								<span class="text-danger">*</span>
+								<i class="fa fa-question-circle float-right" title="Establecer la contraseña actual"></i>
+							</label>
+							<input required type="password" value="" class="form-control txt_pwd @error('pwd_actual') is-invalid @enderror" name="pwd_actual" id="pwd_actual" placeholder="Contraseña actual">
+                            <input type="checkbox" onclick="ver_password('pwd_actual')"><small>Ver ésta contraseña</small>
+                        </div>
+						<div class="form-group">
+							<label class="label-blue label-block" for="">
+								Contraseña nueva:
+								<span class="text-danger">*</span>
+								<i class="fa fa-question-circle float-right" title="Establecer la contraseña nueva"></i>
+							</label>
+							<input required type="password" value="" class="form-control passwordInput txt_pwd @error('pwd_nueva') is-invalid @enderror" name="pwd_nueva" id="pwd_nueva" placeholder="Contraseña nueva">
+                            <input type="checkbox" onclick="ver_password('pwd_nueva')"><small>Ver ésta contraseña</small>
+                        </div>
+                        <div id="msg-ok-update-password" class="alert alert-success">Contraseña actualizada correctamente.</div>
+                        <div id="msg-error-update-password" class="alert alert-danger">La contraseña actual no coincide. Intente nuevamente.</div>
+                        <div>
+                            <div class="request-loader" style="display:inline; float:left;">
+                                <img style="height:50px;" src="{{ asset('img/loader.gif')}}" alt="..." class="">
+                                Procesando...
+                            </div>
+                            <button type="button" id="btn-send-password" class="btn btn-success" style="float:right;">
+                                <i class="fa fa-save"></i>
+                                Guardar datos
+                            </button>
+                        </div>
+                    </form>    
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: CUENTA USUARIO --}}
+
+
+
     <script src="{{url('js/particles.min.js')}}"></script>
     <script src="{{url('js/int.particles.js')}}"></script>
 
     <script>
+        function ver_password(id_field) {
+            var x = $("#"+id_field);
+            if (x.attr('type') === "password") {
+                x.attr('type','text');
+            } else {
+                x.attr('type','password');
+            }
+        }        
         $(function(){
+            //PERFIL DE USUARIO
+            $('#form-update-password').hide();            
+            $('#btn-update-password').click(function(){
+                $('#btn-update-password').slideUp();            
+                $('#btn-logout').slideUp();            
+                $('#form-update-password').slideDown();            
+            });
+            
+            $('#btn-back-update-password').click(function(){    
+                $('#form-update-password').slideUp();            
+                $('#btn-update-password').slideDown();            
+                $('#btn-logout').slideDown();            
+            });
+
+            $('#msg-ok-update-password').hide();
+            $('#msg-error-update-password').hide();
+            $('.request-loader').hide();            
+
+
+			$("#btn-send-password").click(function(e){
+                console.log("Entrando");
+				if($("#form-update-password")[0].checkValidity()) {
+                    console.log("validando");
+					e.preventDefault();
+					$(this).attr('disabled','true');
+                    var btn_update = $(this);
+					var csrfName = '_token'; // Value specified in $config['csrf_token_name']
+					var csrfHash = $("input[name='_token']").val(); // CSRF hash
+					var pwd_actual = $('#pwd_actual').val();
+					var pwd_nuevo = $('#pwd_nueva').val();
+					var route = '{{url("usuarios/update_password/".Crypt::encryptString(Auth::user()->usu_id))}}';
+          			$.ajax({
+  						type: "PUT",
+  						url: route,
+	 		            data: {
+							pwd_actual: pwd_actual,
+							pwd_nuevo: pwd_nuevo,
+							[csrfName]: csrfHash
+						},
+  					    dataType: 'json',
+  						beforeSend: function(){
+    						$('.request-loader').show();
+  						},
+  						success: function(data){
+  							if(data.status == 1){
+                                console.log("STATUS 1");
+									$('#msg-ok-update-password').slideDown(1000);
+									setTimeout(function(){ window.location.reload(); }, 2500);
+  							}else{
+                                console.log("STATUS 2");
+                                $('.request-loader').hide();
+                                    $('#msg-error-update-password').slideDown(1000);
+									setTimeout(function(){$('#msg-error-update-password').slideUp(1000);}, 5000);
+                                    btn_update.attr('disabled',false);
+  							}
+  						},
+  						error: function(data){
+                            console.log("ERROR DE REQUEST");
+                            $('.request-loader').hide();
+                            $('#msg-error-update-password').slideDown(1000);
+    						setTimeout(function(){$('#msg-error-update-password').slideUp(1000);}, 5000);
+                            btn_update.attr('disabled',false);
+  						}
+  				});
+        }
+			});
+
+
 			/*
             -----------------------------------------------------------------------
 			FUNCIONES / EVENTOS GENERICOS PARA TODA LA APP
@@ -236,7 +470,8 @@
                     return 0;
                 }else{
                     //consultar al servidor
-                    return false;
+                    return true;//siempre positivo
+                    return false;//siempre negativo
                 }
                 // if(id_referencia == 0){
                 //     //consultas simples por la nombre de tabla

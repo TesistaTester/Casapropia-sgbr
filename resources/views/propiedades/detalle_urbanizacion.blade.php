@@ -166,7 +166,7 @@
                                             OPCION
                                           </button>
                                           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="{{url('manzanos/'.$item->man_id.'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
+                                            <a class="dropdown-item" href="{{url('manzanos/'.Crypt::encryptString($item->man_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
                                             <a class="dropdown-item btn-eliminar-manzano" data-item_descripcion="{{$item->man_nombre}}" data-cantlot="{{$item->lotes->count()}}" data-manid="{{$item->man_id}}" data-toggle="modal" data-target="#modal-eliminar-manzano" href="#"><i class="fa fa-trash"></i> Eliminar</a>
                                           </div>
                                         </div>

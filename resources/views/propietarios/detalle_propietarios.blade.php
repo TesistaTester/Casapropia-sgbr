@@ -26,7 +26,7 @@
                         <a href="{{url('propietarios_reales/nuevo')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO PROPIETARIO REAL</a>
                     </h3>
 
-                    <div id="map" style="height: 480px;"></div>
+                    {{-- <div id="map" style="height: 480px;"></div> --}}
 
                     <!-- inicio card  -->
                     <div class="card card-stat">

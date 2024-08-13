@@ -16,7 +16,10 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ContratoController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CaptchaTest;
 //storage
 use Illuminate\Support\Facades\Storage;
@@ -25,17 +28,6 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
 //codigos QR
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 /*
 --------------------------------------------------------------------------
@@ -47,7 +39,7 @@ Route::resource('/', WebsiteController::class);
 
 /*
 --------------------------------------------------------------------------
-RUTAS PUBLICAS - ADMINISTRATIVAS
+RUTAS: AUTENTICACION
 --------------------------------------------------------------------------
 */
 //Formulario login de acceso
@@ -55,20 +47,42 @@ Route::get('/login', function () {
     return view('publico.admin.login', ['titulo'=>'Acceso']);
 });
 
+
 //Recuperar contraseña
 Route::get('/reset_password', function () {
     return view('publico.admin.reset_password_validation', ['titulo'=>'Acceso']);
 });
 
-//Rutas para urbanizaciones
+//Autenticacion
+Route::get('/logout', [AuthController::class ,'logout']);
+Route::post('/auth', [AuthController::class ,'autenticar']);
+Route::post('/role_director', [AuthController::class ,'role_director']);
+
+//Inicio
+Route::get('/role_selector', [DashboardController::class ,'role_selector']);
+Route::get('/inicio', [DashboardController::class ,'index']);
+
+/*
+----------------------------------------
+* RUTAS: Urbanizaciones
+----------------------------------------
+*/
 Route::post('/urbanizaciones/get_man_by_urb_json', [UrbanizacionController::class, 'get_manzanos_by_urbanizacion_json']);
 Route::post('/urbanizaciones/{id}/store_plano_inicial', [UrbanizacionController::class, 'store_plano_inicial']);
 Route::resource('/urbanizaciones', UrbanizacionController::class);
-//Rutas para manzanos
+/*
+----------------------------------------
+* RUTAS: Manzanos
+----------------------------------------
+*/
 Route::post('/manzanos/get_lot_by_man_json', [ManzanoController::class, 'get_lotes_by_manzano_json']);
 Route::get('/manzanos/nuevo/urb/{id}', [ManzanoController::class ,'nuevo_manzano_urbanizacion']);
 Route::resource('/manzanos', ManzanoController::class);
-//Rutas para lotes
+/*
+----------------------------------------
+* RUTAS: Lotes
+----------------------------------------
+*/
 Route::post('/lotes/asignar_prr/{id}', [AsignacionPrrController::class ,'guardar_asignacion_propietario_real']);
 Route::post('/lotes/editar_prr/{id}', [AsignacionPrrController::class ,'editar_asignacion_propietario_real']);
 Route::post('/lotes/eliminar_apr/{id}', [AsignacionPrrController::class ,'eliminar_asignacion_propietario_real']);
@@ -96,6 +110,7 @@ Route::get('/estados/nuevo/lote/{id}', [EstadoPropiedadController::class ,'nuevo
 Route::resource('/estados', EstadoPropiedadController::class);
 
 //clientes
+Route::post('clientes/valida_persona', [ClienteController::class, 'valida_persona']);
 Route::post('clientes/valida_cliente', [ClienteController::class, 'valida_cliente']);
 Route::resource('clientes', ClienteController::class);
 
@@ -104,11 +119,22 @@ Route::post('departamentos/{id}/municipios', [DepartamentoController::class, 'ge
 Route::resource('departamentos', DepartamentoController::class);
 
 //reservas
+Route::get('reservas/{id}/devolucion', [ReservaController::class, 'devolucion']);
+Route::get('reservas/{id}/imprimir_recibo', [ReservaController::class, 'imprimir_recibo']);
+Route::post('reservas/{id}/ampliacion', [ReservaController::class, 'ampliacion']);
+Route::post('reservas/{id}/registrar_descargo', [ReservaController::class, 'registrar_descargo']);
+Route::post('reservas/{id}/devolucion', [ReservaController::class, 'devolucion']);
 Route::resource('reservas', ReservaController::class);
 
 //contratos
 Route::resource('contratos', ContratoController::class);
 
+//Rutas para cuentas de usuarios
+Route::put('usuarios/update_password/{id}', [UsuarioController::class, 'update_password']);
+Route::post('usuarios/resetear_password/{id}', [UsuarioController::class, 'resetear_password']);
+Route::post('usuarios/valida_email', [UsuarioController::class, 'valida_email']);
+Route::post('usuarios/valida_usuario', [UsuarioController::class, 'valida_usuario']);
+Route::resource('usuarios', UsuarioController::class);
 
 
 /*

@@ -25,7 +25,7 @@
 											<div class="media-body">
 												<h5 class="mt-0">Nota.-</h5>
 												<p>
-													- Asegurese de tener la fotografía del cliente y el PDF escaneado del documento de identificación.
+													- Asegurese de tener la fotografía y el PDF del documento de identificación escaneado del cliente .
 													<br>
 													- Ingrese correctamente el tipo de cliente, luego este dato NO es posible modificarlo.
 													<br>
@@ -211,7 +211,7 @@
 																<span class="text-danger">*</span>
 																<i class="fa fa-question-circle float-right" title="Establecer la fecha de nacimiento de la persona"></i>
 															</label>
-														<input required type="date" value="{{old('per_fecha_nacimiento')}}" class="form-control @error('per_fecha_nacimiento') is-invalid @enderror" name="per_fecha_nacimiento" id="per_fecha_nacimiento" placeholder="Fecha de nacimiento">
+														<input required type="date" min="{{intval(date('Y'))-$max_edad_cliente}}-01-01" max="{{intval(date('Y'))-$min_edad_cliente}}-01-01" value="{{old('per_fecha_nacimiento')}}" class="form-control @error('per_fecha_nacimiento') is-invalid @enderror" name="per_fecha_nacimiento" id="per_fecha_nacimiento" placeholder="Fecha de nacimiento">
 														@error('per_fecha_nacimiento')
 														<div class="invalid-feedback">
 															{{$message}}
@@ -528,7 +528,7 @@
 										</span></strong></h4>
 										<hr>
 										<small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
-										<h5>CORREO ELECTRÓNICO & TELEFONO DEL CLIENTE</h5>
+										<h5>CORREO ELECTRÓNICO Y TELEFONO DEL CLIENTE</h5>
 										<div class="row">
 											<div class="col-md-4">
 												<div class="form-group">
@@ -683,7 +683,7 @@
 													<i class="fa fa-chevron-left"></i>
 													Anterior
 											</a>
-												<input type="text" name="per_id" id="per_id" value="0">
+												<input type="hidden" name="per_id" id="per_id" value="0">
 												<button type="submit" class="btn btn-primary">
 														<i class="fa fa-save"></i>
 														Guardar datos

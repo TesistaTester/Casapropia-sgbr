@@ -331,3 +331,55 @@ FORM RESERVAS
 #res_concepto_recibo{
   text-transform: uppercase;
 }
+
+
+/*
+------------------------------------------------------------
+CSS para IMPRESIONES
+------------------------------------------------------------
+*/
+@media print{
+  body {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .nav-contextual-container, .nav-contextual-container *, .title-header, .title-header *{
+    display: none !important;
+  }
+
+  .pie_recibo_print{
+    color:#ccc; 
+    background-color:#0D4A9A; 
+  }
+
+  .table-recibo-print{
+    border:3px solid #ccc; 
+    border-radius:10px !important; 
+    background: #fff url('../img/logo_casa_propia_agua.png') center center no-repeat
+  }  
+}
+
+.pie_recibo{
+  color:#777; 
+}
+
+
+.text-bold{
+  font-weight: bold;
+}
+
+.card-bordered{
+  border-bottom:7px solid #0D4A9A;;
+  border-top:7px solid #6DB552;
+  border-left:3px solid #cccc;
+  border-right:3px solid #cccc;
+}
+.table-recibo{
+  border:2px solid #ccc; 
+  /* background: #fff url('../img/logo_casa_propia_agua.png') center center no-repeat */
+}
+
+.tr-little{
+  font-size: 12px;
+}

@@ -34,55 +34,91 @@
 											</div>
 										</div>
 									</div>
-								  <section id="seccion-tipo-cliente">
-									<h4 class="card-title"><strong><span class="text-primary">
-										<i class="fa fa-tag"></i>
-										Tipo de cliente a registrar
-									</span></strong></h4>
-									<hr>
-									<small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
-									<div class="row">
-										<div class="col-md-4">
-											<div class="form-group">
-												<label class="label-blue label-block" for="">
-													Tipo de cliente:
-													<span class="text-danger">*</span>
-													<i class="fa fa-question-circle float-right" title="Establecer el tipo de cliente"></i>
-												</label>
-												<select required name="per_tipo_persona" id="per_tipo_persona" class="form-control @error('per_tipo_persona') is-invalid @enderror">
-													<option value="">Seleccione una opción</option>
-													<option value="0" {{ old('per_tipo_documento', '0') == '0' ? 'selected' : '' }}>Persona natural</option>
-													<option value="1" {{ old('per_tipo_documento') == '1' ? 'selected' : '' }}>Persona juridica</option>
-												</select>
-												@error('per_tipo_persona')
-												<div class="invalid-feedback">
-													{{$message}}
-												</div>											
-												@enderror
-											</div>
-										</div>
-										<div class="col-md-8">
-											<section id="seccion-nombre-comercial">
+								  
+									<section id="seccion-datos-generales">
+										<h4 class="card-title"><strong><span class="text-primary">
+											<i class="fa fa-home"></i>
+											Datos de la propiedad
+										</span></strong></h4>
+										<hr>
+											<small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="row">
+													<div class="col-md-3">
 														<div class="form-group">
 															<label class="label-blue label-block" for="">
-																Nombre comercial:
+																Urbanización:
 																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el nombre comercial de la empresa"></i>
+																<i class="fa fa-question-circle float-right" title="Seleccione la urbanización a la que pertenece la propiedad"></i>
 															</label>
-															<input required type="text" value="{{old('per_nombre_comercial','ninguno')}}" class="form-control @error('per_nombre_comercial') is-invalid @enderror" name="per_nombre_comercial" id="per_nombre_comercial" placeholder="Nombre comercial de la empresa o negocio">
-														@error('per_nombre_comercial')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
+															<select required name="urb_id" id="urb_id" class="form-control @error('urb_id') is-invalid @enderror" data-get-manzanos-json="{{url('urbanizaciones/get_man_by_urb_json')}}">
+																<option value="">Seleccione una opción</option>
+																@foreach($urbanizaciones as $item)
+																<option value="{{$item->urb_id}}" {{ old('urb_id') == $item->urb_id ? 'selected' : '' }}>{{$item->urb_nombre}}</option>
+																@endforeach
+															</select>
+															@error('urb_id')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+														</div>
 													</div>
-											  </section>
+													<div class="col-md-3">
+														<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Manzano:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Seleccione el manzano al que pertenece la propiedad"></i>
+															</label>
+															<select required name="man_id" id="man_id" class="form-control @error('man_id') is-invalid @enderror" data-get-lotes-json="{{url('manzanos/get_lot_by_man_json')}}">
+																<option value="">Seleccione una opción</option>
+															</select>
+															@error('man_id')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Lote:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Seleccione el lote que desea reservar"></i>
+															</label>
+															<select required name="lot_id" id="lot_id" class="form-control @error('lot_id') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+															</select>
+															@error('lot_id')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Modalidad de venta:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Modalidad de venta de la propiedad"></i>
+															</label>
+															<input type="text" class="form-control" id="res_modalidad" name="res_modalidad" readonly>
+															@error('res_modalidad')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
-									</div>
-								  </section>
-
-
-								  
+									  </section>
+	
 								  <section id="seccion-datos-personales">
 									<h4 class="card-title"><strong><span class="text-primary">
 										<i class="fa fa-database"></i>
@@ -324,373 +360,7 @@
 									</div> --}}
 								  </section>
 
-  								  <section id="seccion-domicilio">
-										<h4 class="card-title"><strong><span class="text-primary">
-											<i class="fa fa-home"></i>
-											Datos del domicilio y actividad económica <span id="txt-domicilio-empresa"></span>
-										</span></strong></h4>
-										<hr>
-										<small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
-										<h5>DATOS DEL DOMICILIO</h5>
-										<div class="row">
-											<div class="col-md-5">
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Tipo de domicilio:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el tipo de domicilio"></i>
-															</label>
-															<select required class="form-control @error('dom_tipo') is-invalid @enderror" name="dom_tipo" id="dom_tipo">
-																<option value="">Seleccione una opción</option>
-																<option value="0"{{ old('dom_tipo') == '0' ? 'selected' : '' }}>ALQUILER</option>
-																<option value="1"{{ old('dom_tipo') == '1' ? 'selected' : '' }}>ANTICRETICO</option>
-																<option value="2" {{ old('dom_tipo') == '2' ? 'selected' : '' }}>PROPIO</option>
-																<option value="3"{{ old('dom_tipo') == '3' ? 'selected' : '' }}>OTRO</option>
-															</select>
-															@error('dom_tipo')
-															<div class="invalid-feedback">
-																{{$message}}
-															</div>											
-															@enderror
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Departamento:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el pais donde está el domicilio del cliente"></i>
-															</label>
-															<select required name="dep_id" id="dep_id" class="form-control @error('dep_id') is-invalid @enderror" data-municipio-change="{{url('departamentos')}}">
-																<option value="">Seleccione una opción</option>
-																@foreach($departamentos as $item)
-																<option value="{{$item->dep_id}}" {{ old('dep_id') == $item->dep_id ? 'selected' : '' }}>{{$item->dep_nombre}}</option>
-																@endforeach
-															</select>
-															@error('dep_id')
-															<div class="invalid-feedback">
-																{{$message}}
-															</div>											
-															@enderror
-														</div>
-												</div>
-												<div class="row">
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-																<label class="label-blue label-block" for="">
-																	Municipio:
-																	<span class="text-danger">*</span>
-																	<i class="fa fa-question-circle float-right" title="Establecer el número de documento de la persona"></i>
-																</label>
-																<select required name="mun_id" id="mun_id" class="form-control search-municipio @error('mun_id') is-invalid @enderror">
-																	<option value="">Seleccione una opción</option>
-																</select>
-																@error('mun_id')
-																<div class="invalid-feedback">
-																	{{$message}}
-																</div>											
-																@enderror
-															</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Zona:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer la zona donde está ubicado el domicilio"></i>
-															</label>
-															<input required type="text" value="{{old('dom_zona')}}" class="form-control @error('dom_zona') is-invalid @enderror" name="dom_zona" id="dom_zona" placeholder="Zona">
-															@error('dom_zona')
-															<div class="invalid-feedback">
-																{{$message}}
-															</div>											
-															@enderror
-														</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Calle/Avenida:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer la calle o avenida donde está ubicado el domicilio"></i>
-															</label>
-															<input required type="text" value="{{old('dom_calle_avenida')}}" class="form-control @error('dom_calle_avenida') is-invalid @enderror" name="dom_calle_avenida" id="dom_calle_avenida" placeholder="Calle/Avenida">
-															@error('dom_calle_avenida')
-															<div class="invalid-feedback">
-																{{$message}}
-															</div>											
-															@enderror
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-																<label class="label-blue label-block" for="">
-																	Número:
-																	<span class="text-danger">*</span>
-																	<i class="fa fa-question-circle float-right" title="Establecer el número de documento de la persona"></i>
-																</label>
-																<input  type="text" value="{{old('dom_nro')}}" class="form-control @error('dom_nro') is-invalid @enderror" name="dom_nro" id="dom_nro" placeholder="Nro domicilio">
-																@error('dom_nro')
-																<div class="invalid-feedback">
-																	{{$message}}
-																</div>											
-																@enderror
-															</div>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Latitud:
-																<i class="fa fa-question-circle float-right" title="Establecer la latitud del domicilio"></i>
-															</label>
-															<input type="text" value="{{old('dom_latitud', 0)}}" class="form-control @error('dom_latitud') is-invalid @enderror" name="dom_latitud" id="dom_latitud" placeholder="Latitud" readonly>
-															@error('dom_latitud')
-															<div class="invalid-feedback">
-																{{$message}}
-															</div>											
-															@enderror
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group">
-																<label class="label-blue label-block" for="">
-																	Longitud:
-																	<i class="fa fa-question-circle float-right" title="Establecer la longitud del domicilio"></i>
-																</label>
-																<input  type="text" value="{{old('dom_longitud', 0)}}" class="form-control @error('dom_longitud') is-invalid @enderror" name="dom_longitud" id="dom_longitud" placeholder="Longitud" readonly>
-																@error('dom_longitud')
-																<div class="invalid-feedback">
-																	{{$message}}
-																</div>											
-																@enderror
-															</div>
-													</div>
-												</div>
-											</div>
-											<div class="col-md-7">
-												<label class="label-blue label-block" for="">
-													Georeferenciar domicilio:
-													<i class="fa fa-question-circle float-right" title="Establecer georeferenciación del domicilio"></i>
-												</label>
-												<div id="mapa-domicilio" style="width:100%; height: 300px;"></div>
-											</div>
-										</div>
-										<hr>
-									<div class="row">
-										<div class="col-md-5">
-											<h5>DATOS DE LA ACTIVIDAD ECONÓMICA</h5>
-											<div class="form-group">
-												<label class="label-blue label-block" for="">
-													Actividad económica:
-													<span class="text-danger">*</span>
-													<i class="fa fa-question-circle float-right" title="Establecer la actividad económica del cliente"></i>
-												</label>
-												<select required name="ace_id" id="ace_id" class="form-control search-actividad-economica @error('ace_id') is-invalid @enderror">
-													<option value="">Seleccione una opción</option>
-													@foreach($actividades as $item)
-													<option value="{{$item->ace_id}}" {{ old('ace_id') == $item->ace_id ? 'selected' : '' }}>{{$item->ace_descripcion}}</option>
-													@endforeach
-												</select>
-												@error('ace_id')
-												<div class="invalid-feedback">
-													{{$message}}
-												</div>											
-												@enderror
-											</div>
-										</div>
-									</div>
-									{{-- <div class="row">
-										<div class="col-md-4 offset-md-8 text-right">
-											<a href="#" id="ant-personales" class="btn btn-secondary">
-													<i class="fa fa-chevron-left"></i>
-													Anterior
-											</a>
-											<button type="submit" id="next-contacto" class="btn btn-secondary">
-													<i class="fa fa-chevron-right"></i>
-													Siguiente
-											</button>
-										</div>
-									</div> --}}
 
-								    </section>
-
-									<section id="seccion-contacto">
-										<h4 class="card-title"><strong><span class="text-primary">
-											<i class="fa fa-phone-square"></i>
-											Datos de contacto
-										</span></strong></h4>
-										<hr>
-										<small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
-										<h5>CORREO ELECTRÓNICO & TELEFONO DEL CLIENTE</h5>
-										<div class="row">
-											<div class="col-md-4">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Correo electrónico:
-															<i class="fa fa-question-circle float-right" title="Establecer la dirección de correo electrónico"></i>
-														</label>
-													<input  type="email" value="{{old('cli_email')}}" class="form-control @error('cli_email') is-invalid @enderror" name="cli_email" id="cli_email" placeholder="E-mail">
-													@error('cli_email')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-											<div class="col-md-4">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Nro de Teléfono/celular:
-															<i class="fa fa-question-circle float-right" title="Establecer el número de telefono o celular del cliente"></i>
-														</label>
-													<input  type="text" value="{{old('cli_telefono')}}" class="form-control @error('cli_telefono') is-invalid @enderror" name="cli_telefono" id="cli_telefono" placeholder="Nro celular">
-													@error('cli_telefono')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-										</div>
-
-										<h5>PERSONA DE REFERENCIA</h5>
-										<div class="row">
-											<div class="col-md-3">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Nombres:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer los nombres de la persona de referencia"></i>
-														</label>
-													<input required type="text" value="{{old('pre_nombres')}}" class="form-control @error('pre_nombres') is-invalid @enderror" name="pre_nombres" id="pre_nombres" placeholder="Nombres">
-													@error('pre_nombres')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-											<div class="col-md-2">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Primer apellido:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer el primer apellido de la persona de referencia"></i>
-														</label>
-													<input required type="text" value="{{old('pre_primer_apellido')}}" class="form-control @error('pre_primer_apellido') is-invalid @enderror" name="pre_primer_apellido" id="pre_primer_apellido" placeholder="Primer apellido">
-													@error('pre_primer_apellido')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-											<div class="col-md-2">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Segundo apellido:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer el segundo apellido de la persona de referencia"></i>
-														</label>
-													<input required type="text" value="{{old('pre_segundo_apellido')}}" class="form-control @error('pre_segundo_apellido') is-invalid @enderror" name="pre_segundo_apellido" id="pre_segundo_apellido" placeholder="Segundo apellido">
-													@error('pre_segundo_apellido')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-											<div class="col-md-3">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Parentesto:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer el grado de parentesco"></i>
-														</label>
-														<select required class="form-control @error('pre_parentesco') is-invalid @enderror" name="pre_parentesco" id="pre_parentesco">
-															<option value="">Seleccione una opción</option>
-															<option value="0"{{ old('pre_parentesco') == '0' ? 'selected' : '' }}>PADRE/MADRE</option>
-															<option value="1"{{ old('pre_parentesco') == '1' ? 'selected' : '' }}>HIJO(A)</option>
-															<option value="2"{{ old('pre_parentesco') == '2' ? 'selected' : '' }}>ESPOSO(A)/CONYUGUE</option>
-															<option value="3"{{ old('pre_parentesco') == '3' ? 'selected' : '' }}>HERMANO(A)</option>
-															<option value="4"{{ old('pre_parentesco') == '4' ? 'selected' : '' }}>ABUELO(A)</option>
-															<option value="5"{{ old('pre_parentesco') == '5' ? 'selected' : '' }}>NIETO(A)</option>
-															<option value="6"{{ old('pre_parentesco') == '6' ? 'selected' : '' }}>TIO(A)</option>
-															<option value="7"{{ old('pre_parentesco') == '7' ? 'selected' : '' }}>SOBRINO(A)</option>
-															<option value="8"{{ old('pre_parentesco') == '8' ? 'selected' : '' }}>OTRO</option>
-														</select>
-												@error('pre_parentesco')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-											<div class="col-md-2">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															Telefono:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer el telefono de contacto de la persona de referencia"></i>
-														</label>
-													<input required type="text" value="{{old('pre_telefono')}}" class="form-control @error('pre_telefono') is-invalid @enderror" name="pre_telefono" id="pre_telefono" placeholder="Nro de teléfono">
-													@error('pre_telefono')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-										</div>
-										<h5>CONTACTO CON CASA PROPIA</h5>
-										<div class="row">
-											<div class="col-md-6">
-												<div class="form-group">
-														<label class="label-blue label-block" for="">
-															¿Cómo conoció la oferta inmobiliaria de CASA PROPIA?:
-															<span class="text-danger">*</span>
-															<i class="fa fa-question-circle float-right" title="Establecer el segundo apellido de la persona"></i>
-														</label>
-														<select required multiple class="form-control select-multi @error('foc_id') is-invalid @enderror" name="foc_id[]" id="foc_id">
-															<option value="">Seleccione una opción</option>
-															@foreach ($formas_contacto as $item)
-															<option value="{{$item->foc_id}}" {{ old('foc_id') == $item->foc_id ? 'selected' : '' }}>{{$item->foc_medio}}</option>
-															@endforeach
-														</select>
-													@error('foc_id[]')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
-												</div>
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="col-md-6 offset-md-6 text-right">
-												<button type="reset" id="btn-reestablecer-form" class="btn btn-danger">
-														<i class="fa fa-refresh"></i>
-														Resetear formulario
-												</button>
-												<a href="#" id="ant-domicilio" class="btn btn-secondary">
-													<i class="fa fa-chevron-left"></i>
-													Anterior
-											</a>
-												<input type="text" name="per_id" id="per_id" value="0">
-												<button type="submit" class="btn btn-primary">
-														<i class="fa fa-save"></i>
-														Guardar datos
-												</button>
-											</div>
-										</div>
-									</section>
 								</form>
 							</div>
 						</div>
@@ -1033,35 +703,105 @@ $(function(){
 
 });	
 
-
 	/*
 	--------------------------------------------------------------------------------------
 	MAPA DOMICILIO
 	--------------------------------------------------------------------------------------
 	*/
-	var mymap = L.map('mapa-domicilio').setView([-16.50357853577617,-68.16282717846254], 13);
+//	var mymap = L.map('mapa-domicilio').setView([-16.50357853577617,-68.16282717846254], 13);
 	//AGREGAR MARCADOR
-	var marker = L.marker(new L.LatLng(-16.50357853577617,-68.16282717846254), {
-							draggable: true
-				}).addTo(mymap);
-	marker.bindPopup('Mover el marcador para<br>apuntar en la ubicación<br>georeferenciada del domicilio.').openPopup();
-	marker.on('dragend', function (e) {
-		document.getElementById('dom_latitud').value = marker.getLatLng().lat;
-		document.getElementById('dom_longitud').value = marker.getLatLng().lng;
-	});
+	// var marker = L.marker(new L.LatLng(-16.50357853577617,-68.16282717846254), {
+	// 						draggable: true
+	// 			}).addTo(mymap);
+	// marker.bindPopup('Mover el marcador para<br>apuntar en la ubicación<br>georeferenciada del domicilio.').openPopup();
+	// marker.on('dragend', function (e) {
+	// 	document.getElementById('dom_latitud').value = marker.getLatLng().lat;
+	// 	document.getElementById('dom_longitud').value = marker.getLatLng().lng;
+	// });
 
 
 	//CAPA BASE
-	var map_token = '{{config('casapropia.MAPBOX_ACCESS_TOKEN')}}';
-	L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token="+map_token, {
-				maxZoom: 20,
-				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-					'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-					'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-				id: 'mapbox/streets-v11',
-				tileSize: 512,
-				zoomOffset: -1
-			}).addTo(mymap);
+	// var map_token = '{{config('casapropia.MAPBOX_ACCESS_TOKEN')}}';
+	// L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token="+map_token, {
+	// 			maxZoom: 20,
+	// 			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+	// 				'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+	// 				'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	// 			id: 'mapbox/streets-v11',
+	// 			tileSize: 512,
+	// 			zoomOffset: -1
+	// 		}).addTo(mymap);
+
+	/*
+	* Get Manzanas de la urbanización
+	* Evento: change
+	*/
+	$('#urb_id').change(function(e){
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: $(this).attr('data-get-manzanos-json'),
+			data: {
+				urb_id: $(this).val(),
+				'_token': $("input[name='_token']").val()},
+     			    dataType: 'json',
+			success: function(data){
+				$('#man_id').html('');
+				$('#man_id').append('<option value="">Seleccione una opción</option>');
+				//rellenando el select
+				$(data.manzanos).each(function(){
+					let select_item = '<option value="'+this.man_id+'">'+this.man_nombre.toUpperCase()+'</option>';
+					$('#man_id').append(select_item);
+				});
+			},
+			error: function(data){
+				console.log("Error de servidor");
+			}
+		});
+	});
+
+	$('body').on('change','#man_id',function(e){
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: $(this).attr('data-get-lotes-json'),
+			data: {
+				man_id: $(this).val(),
+				'_token': $("input[name='_token']").val()},
+     			dataType: 'json',
+			success: function(data){
+				$('#lot_id').html('');
+				$('#lot_id').append('<option value="">Seleccione una opción</option>');
+				//rellenando el select
+				$(data.lotes).each(function(){
+					let select_item = '<option data-modalidad="'+this.mov_tipo_venta+'" value="'+this.lot_id+'">'+this.lot_nro+'</option>';
+					$('#lot_id').append(select_item);
+				});
+			},
+			error: function(data){
+				console.log("Error de servidor");
+			}
+		});
+	});
+
+	$('body').on('change','#lot_id',function(e){
+		e.preventDefault();
+		$modalidad_selected = $(this).find(":selected").attr('data-modalidad');
+
+		$modalidad_selected == 0 ? $('#res_modalidad').val('AL CONTADO') : "";
+		$modalidad_selected == 1 ? $('#res_modalidad').val('A PAGOS') : "";
+		$modalidad_selected == 2 ? $('#res_modalidad').val('A CREDITO') : "";
+
+		let res_concepto = $('#res_concepto_recibo').val();
+		let res_urb = $('#urb_id option:selected').text();
+		let res_man = $('#man_id option:selected').text();
+		let res_lot = $('#lot_id option:selected').text();
+		res_concepto = res_concepto+" "+res_lot+" de la urbanizacion "+res_urb+" manzano "+res_man;
+		$('#res_concepto_recibo').val(res_concepto);
+	});
+
+
+
 	</script>
 
 

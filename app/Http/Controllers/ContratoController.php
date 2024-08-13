@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\Contrato;
+use App\Models\Propiedad;
+use App\Models\Propietario_legal;
+use App\Models\Urbanizacion;
 use Illuminate\Http\Request;
 
 class ContratoController extends Controller
@@ -29,7 +33,17 @@ class ContratoController extends Controller
      */
     public function create()
     {
-        //
+        $propiedades = Propiedad::all();
+        $urbanizaciones = Urbanizacion::all();
+        $clientes = Cliente::all();
+        // $propietarios = Propietario_legal::all();
+        return view('contratos.form_nuevo_contrato', ['titulo'=>'Registrar contrato',
+                                                          'urbanizaciones' => $urbanizaciones,
+                                                          'clientes' => $clientes,
+                                                        //   'propietarios' => $propietarios,
+                                                          'propiedades' => $propiedades,
+                                                          'modulo_activo' => $this->modulo
+                                                         ]);
     }
 
     /**

@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Crypt;
 class ClienteController extends Controller
 {
     private $modulo = "clientes";
+    private $max_edad_cliente = 100; //edad maxima de un cliente, para registro de calendario (validacion)
+    private $min_edad_cliente = 18; // edad minima de un cliente, para registro de calendario (validacion)
     /**
      * Display a listing of the resource.
      *
@@ -52,7 +54,9 @@ class ClienteController extends Controller
                                                        'formas_contacto'=>$formas_contacto,
                                                        'departamentos'=>$departamentos,
                                                        'municipios'=>$municipios,
-                                                       'modulo_activo' => $this->modulo
+                                                       'modulo_activo' => $this->modulo,
+                                                       'min_edad_cliente' => $this->min_edad_cliente,
+                                                       'max_edad_cliente' => $this->max_edad_cliente,
                                                     ]);
     }
 
@@ -239,7 +243,10 @@ class ClienteController extends Controller
                 'formas_contacto'=>$formas_contacto,
                 'departamentos'=>$departamentos,
                 'municipios'=>$municipios,
-                'modulo_activo' => $this->modulo
+                'modulo_activo' => $this->modulo,
+                'min_edad_cliente' => $this->min_edad_cliente,
+                'max_edad_cliente' => $this->max_edad_cliente,
+
         ]);
     }
 
@@ -439,6 +446,26 @@ class ClienteController extends Controller
                 $persona = Persona::get_persona_por_nro_documento($x);
                 return response()->json(['status'=>'2','msg'=>'Solo existe en persona', 'persona'=>$persona]);
             }
+        }
+
+    }
+
+    /**
+     * Funcion para validar la existencia de un cliente.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function valida_persona(Request $request){
+        $x = $request->input('per_nro_id');
+        $existe_persona = Persona::existe_persona_por_nro_documento($x);
+        if($existe_persona == false){
+            //si no existe, entonces dejar continuar el llenado
+            return response()->json(['status'=>'1','msg'=>'La persona no existe en BD, continuar el registro']);
+        }else{
+            //si existe en persona, mandar datos para autollenar
+            $persona = Persona::get_persona_por_nro_documento($x);
+            return response()->json(['status'=>'2','msg'=>'Solo existe en persona', 'persona'=>$persona]);
         }
 
     }

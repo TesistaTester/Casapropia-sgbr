@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             Estado_disponibilidadSeeder::class,
             FormaContactoSeeder::class,
             UbicacionSeeder::class,
+            RolSeeder::class,
+            AdminSeeder::class,
         ]);
 
     }

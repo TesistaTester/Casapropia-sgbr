@@ -17,15 +17,15 @@
 						<section id="form-login">
 							<h2 class="text-primary font-weight-bold">FORMULARIO DE ACCESO</h2>
 							<hr>
-							<form action="{{url('autenticar/')}}" method="POST" autocomplete="off">
+							<form action="{{url('auth')}}" method="POST" autocomplete="off">
 								@csrf
 								<small class="text-secondary">Ingrese sus credenciales para ingresar al sistema.</small>
 								<input style="display:none">
 								<input type="text" style="display:none">
 								<input autocomplete="false" name="hidden" type="text" style="display:none;">
 								<div class="form-group">
-								  <label class="text-primary">Número de CI: </label>
-								  <input required type="text" class="form-control form-control-lg" name="trq" id="trq" placeholder="Escriba su nro CI." autocomplete="false" autofocus>
+								  <label class="text-primary">E-mail: </label>
+								  <input required type="mail" class="form-control form-control-lg" name="uuo" id="uuo" placeholder="Escriba su correo eletrónico." autocomplete="false" autofocus>
 								</div>
 								<div class="form-group">
 								  <label class="text-primary">Contraseña: </label>

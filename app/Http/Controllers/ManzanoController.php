@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Urbanizacion;
 use App\Models\Manzano;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 
 class ManzanoController extends Controller
 {
@@ -71,7 +72,7 @@ class ManzanoController extends Controller
         $manzano->man_nombre = $request->input('man_nombre'); 
         $manzano->save();
 
-        return redirect('/urbanizaciones/'.$urb_id);
+        return redirect('/urbanizaciones/'.Crypt::encryptString($urb_id));
     }
 
     /**
@@ -93,6 +94,7 @@ class ManzanoController extends Controller
      */
     public function edit($id)
     {
+        $id = Crypt::decryptString($id);//Desencriptando parametro ID
         $manzano = Manzano::where('man_id', $id)->first();
         $urbanizacion = $manzano->urbanizacion;
         $titulo = 'EDITAR MANZANO - '.$urbanizacion->urb_nombre;
@@ -124,7 +126,7 @@ class ManzanoController extends Controller
         $manzano->man_nombre = $request->input('man_nombre'); 
         $manzano->save();
 
-        return redirect('/urbanizaciones/'.$urb_id);
+        return redirect('/urbanizaciones/'.Crypt::encryptString($urb_id));
     }
 
     /**
@@ -150,6 +152,7 @@ class ManzanoController extends Controller
                  ->join('modalidad_venta', 'propiedad.pro_id', '=', 'modalidad_venta.pro_id')
                  ->where('lote.man_id', $id)
                  ->where('modalidad_venta.mov_activo', true)
+                 ->whereNotIn('propiedad.pro_id', DB::table('reserva')->select('pro_id'))
                 //  ->where('')//agregar estado de propiedad de acuerdo a requerimientos
                  ->get();
         return response()->json(['status'=>'1', 'lotes'=>$lotes]);

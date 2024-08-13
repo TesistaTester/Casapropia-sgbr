@@ -7,7 +7,7 @@
 		<h3 class="title-header" style="text-transform: uppercase;">
 			<i class="fa fa-plus"></i>
 			{{$titulo}}
-			<a href="{{url('clientes')}}" title="Volver a lista de reservas" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
+			<a href="{{url('reservas')}}" title="Volver a lista de reservas" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
 		</h3>
 
 		<div class="row">
@@ -17,7 +17,7 @@
 					<div class="row no-gutters">
 						<div class="col-md-12">
 							<div class="card-body">
-								<form id="form-nuevo-reserva" action="{{url('reservas')}}" data-validation1="{{url('clientes/valida_cliente')}}" method="POST">
+								<form id="form-nuevo-reserva" action="{{url('reservas')}}" data-validation1="{{url('clientes/valida_persona')}}" method="POST">
 								  @csrf
 							  
 								  <section id="seccion-datos-generales">
@@ -202,8 +202,8 @@
 															<span class="text-danger">*</span>
 															<i class="fa fa-question-circle float-right" title="Establecer el monto de la reserva"></i>
 														</label>
-														<input required type="number" step=".01" name="res_monto" id="res_monto" class="form-control @error('res_monto') is-invalid @enderror">
-														@error('urb_id')
+														<input required type="number" step=".1" name="res_monto" id="res_monto" class="form-control @error('res_monto') is-invalid @enderror">
+														@error('res_monto')
 														<div class="invalid-feedback">
 															{{$message}}
 														</div>											
@@ -219,9 +219,9 @@
 														</label>
 														<select required name="res_moneda" id="res_moneda" class="form-control @error('res_moneda') is-invalid @enderror">
 															<option value="0" {{ old('res_moneda') == '0' ? 'selected' : '' }}>Bolivianos</option>
-															<option value="1" {{ old('res_moneda') == '0' ? 'selected' : '' }}>Dólares</option>
+															<option value="1" {{ old('res_moneda') == '1' ? 'selected' : '' }}>Dólares</option>
 														</select>
-														@error('urb_id')
+														@error('res_moneda')
 														<div class="invalid-feedback">
 															{{$message}}
 														</div>											
@@ -236,7 +236,7 @@
 															<i class="fa fa-question-circle float-right" title="Establecer el concepto del recibo"></i>
 														</label>
 														<input required type="text" value="Reserva de lote" class="form-control" id="res_concepto_recibo" name="res_concepto_recibo">
-														@error('man_id')
+														@error('res_concepto_recibo')
 														<div class="invalid-feedback">
 															{{$message}}
 														</div>											
@@ -298,6 +298,11 @@
 										</div>
 									</div>
 								  </section>
+								  <input type="hidden" name="per_id" id="per_id" value="0">
+								  <button type="submit" class="btn btn-primary">
+									<i class="fa fa-save"></i>
+									Guardar datos
+								  </button>
 
 								</form>
 							</div>
@@ -313,7 +318,7 @@
 
 
   {{-- INICIO MODAL: EXISTE PROPIETARIO / AUTOCOMPLETAR FORMULARIO --}}
-  {{-- <div class="modal fade" id="modal-autocompletar-formulario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modal-autocompletar-formulario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header" style="background-color:#eee;">
@@ -367,7 +372,7 @@
         </div>
       </div>
     </div>
-  </div> --}}
+  </div>
   {{-- FIN MODAL: EXISTE PROPIETARIO / AUTOCOMPLETAR FORMULARIO --}}
 
 	
@@ -396,8 +401,8 @@ $(function(){
 	       			    dataType: 'json',
 						beforeSend: function(){
 							$('.request-loader').show(20);
-							$('#alert-cliente-existe').hide();
 							$('#alert-persona-existe').hide();
+							$('#alert-cliente-existe').hide();
 							$('#btn-entendido').hide();
 							$('#btn-no-autocompletar').hide();
 							$('#btn-autocompletar').hide();
@@ -421,17 +426,18 @@ $(function(){
 								$('#btn-autocompletar').show();
 								$('#modal-autocompletar-formulario').modal('show')
 							}
-							if(data.status == 3){
-								//Mostrar modal error existe propietario y vaciar formulario
-								console.log(data);
-								let cliente = data.cliente[0];
-								$('#txt-nro-documento').html(cliente.per_nro_id+' '+cliente.per_expedido);
-								$('#txt-nombre-completo').html(cliente.per_nombres+' '+cliente.per_primer_apellido+' '+cliente.per_segundo_apellido);
-								$('#alert-cliente-existe').show();
-								$('#btn-entendido').show();
-								$('#modal-autocompletar-formulario').modal('show')
-								$('#form-nuevo-propietario-real').trigger("reset");
-							}
+							// if(data.status == 3){
+							// 	//Mostrar modal error existe propietario y vaciar formulario
+							// 	console.log(data);
+							// 	let cliente = data.cliente[0];
+							// 	$('#txt-nro-documento').html(cliente.per_nro_id+' '+cliente.per_expedido);
+							// 	$('#txt-nombre-completo').html(cliente.per_nombres+' '+cliente.per_primer_apellido+' '+cliente.per_segundo_apellido);
+							// 	$('#alert-cliente-existe').show();
+							// 	$('#btn-no-autocompletar').show();
+							// 	$('#btn-autocompletar').show();
+							// 	$('#modal-autocompletar-formulario').modal('show')
+							// 	$('#form-nuevo-reserva').trigger("reset");
+							// }
 						},
 						error: function(data){
 							console.log(data);
@@ -530,12 +536,12 @@ $(function(){
 		$('#per_nombres').val(registro_persona.per_nombres);
 		$('#per_primer_apellido').val(registro_persona.per_primer_apellido);
 		$('#per_segundo_apellido').val(registro_persona.per_segundo_apellido);
-		$('#per_fecha_nacimiento').val(registro_persona.per_fecha_nacimiento);
-		$('#per_sexo').val(registro_persona.per_sexo).change();
-		$('#per_estado_civil').val(registro_persona.per_estado_civil).change();
+		// $('#per_fecha_nacimiento').val(registro_persona.per_fecha_nacimiento);
+		// $('#per_sexo').val(registro_persona.per_sexo).change();
+		// $('#per_estado_civil').val(registro_persona.per_estado_civil).change();
 		$('#per_id').val(registro_persona.per_id);
-		$("#form-nuevo-propietario-legal :input:not(:button):not(input[type='hidden'])").attr('readonly', 'readonly');
-		$('#cli_foto').focusin();
+		// $("#form-nuevo-propietario-legal :input:not(:button):not(input[type='hidden'])").attr('readonly', 'readonly');
+		$('#res_monto').focus();
 		console.log('enfocado');
 	});		
 
@@ -544,23 +550,23 @@ $(function(){
 	EVENTOS DEL FORMULARIO EN CASO DE SER NOMBRE COMERCIAL Y REPRESENTANTE LEGAL
 	-------------------------------------------------------------------------------------------------------------------------
 	*/
-	$('#seccion-nombre-comercial').hide();
-	$('#per_tipo_persona').change(function(e){
-		if($(this).val() == '0'){
-			$('#seccion-nombre-comercial').slideUp();
-			$('#txt-representante-empresa').html('del cliente');
-			$('#txt-domicilio-empresa').fadeOut();
-			$('#per_nombre_comercial').val('ninguno');
-		}
-		if($(this).val() == '1'){
-			$('#seccion-nombre-comercial').slideDown();
-			$('#txt-representante-empresa').html('del representante legal');
-			$('#txt-representante-empresa').fadeIn();
-			$('#txt-domicilio-empresa').html('de la empresa');
-			$('#txt-domicilio-empresa').fadeIn();
-			$('#per_nombre_comercial').val('');
-		}
-	});
+	// $('#seccion-nombre-comercial').hide();
+	// $('#per_tipo_persona').change(function(e){
+	// 	if($(this).val() == '0'){
+	// 		$('#seccion-nombre-comercial').slideUp();
+	// 		$('#txt-representante-empresa').html('del cliente');
+	// 		$('#txt-domicilio-empresa').fadeOut();
+	// 		$('#per_nombre_comercial').val('ninguno');
+	// 	}
+	// 	if($(this).val() == '1'){
+	// 		$('#seccion-nombre-comercial').slideDown();
+	// 		$('#txt-representante-empresa').html('del representante legal');
+	// 		$('#txt-representante-empresa').fadeIn();
+	// 		$('#txt-domicilio-empresa').html('de la empresa');
+	// 		$('#txt-domicilio-empresa').fadeIn();
+	// 		$('#per_nombre_comercial').val('');
+	// 	}
+	// });
 
 
 

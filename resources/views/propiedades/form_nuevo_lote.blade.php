@@ -55,7 +55,7 @@
                                                 <span class="text-danger">*</span>
                                                 <i class="fa fa-question-circle float-right" title="Establecer un número de lote"></i>
                                             </label>
-                                        <input required data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_nro" name="lot_nro" value="{{old('lot_nro')}}" class="form-control @error('man_id') is-invalid @enderror" placeholder="Nro lote">
+                                        <input required data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_nro" name="lot_nro" value="{{old('lot_nro')}}" class="form-control @error('lot_nro') is-invalid @enderror" placeholder="Nro lote">
                                         @error('lot_nro')
                                         <div class="invalid-feedback">
                                             {{$message}}

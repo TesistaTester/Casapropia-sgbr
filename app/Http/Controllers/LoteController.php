@@ -113,7 +113,7 @@ class LoteController extends Controller
 
         $urb_id = $request->input('urb_id');
 
-        return redirect('urbanizaciones/'.$urb_id);
+        return redirect('urbanizaciones/'.Crypt::encryptString($urb_id));
     }
 
     /**
