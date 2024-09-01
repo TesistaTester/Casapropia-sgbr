@@ -141,8 +141,7 @@
                         <a class="nav-item nav-link @if($modulo_activo == 'contratos'): active @endif" href="{{url('contratos')}}"><i class="fa fa-file"></i> CONTRATOS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'usuarios'): active @endif" href="{{url('usuarios')}}"><i class="fa fa-users"></i> USUARIOS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'reportes'): active @endif" href="{{url('reportes')}}"><i class="fa fa-line-chart"></i> REPORTES</a> --}}
-                    </nav>
-    
+                    </nav>    
                 <div class="box-copyright">
                     &copy; {{date('Y')}} {{env('APP_NAME')}}
                 </div>
