@@ -163,13 +163,38 @@
                                             Descripción complementaria:
                                             <i class="fa fa-question-circle float-right" title="Agregar una descripción complementaria de la propiedad"></i>
                                         </label>
-                                        <textarea name="pro_descripcion" placeholder="Describir adicional de la propiedad" rows="7" class="form-control @error('pro_descripcion') is-invalid @enderror"></textarea>
+                                        <textarea name="pro_descripcion" placeholder="Describir adicional de la propiedad" rows="1" class="form-control @error('pro_descripcion') is-invalid @enderror"></textarea>
                                         @error('pro_descripcion')
                                         <div class="invalid-feedback">
                                             {{$message}}
                                         </div>											
                                         @enderror
                                     </div>
+                                    <div class="form-group">
+                                        <label class="label-blue label-block" for="">
+                                            Base imponible:
+                                            <i class="fa fa-question-circle float-right" title="Establecer la base imponible de la propiedad (si corresponde)"></i>
+                                        </label>
+                                        <input type="text" value="{{old('pro_muro_perimetral')}}" name="pro_base_imponible" class="form-control @error('pro_base_imponible') is-invalid @enderror" placeholder="Base imponible">
+                                        @error('pro_base_imponible')
+                                        <div class="invalid-feedback">
+                                            {{$message}}
+                                        </div>											
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="label-blue label-block" for="">
+                                            Nro inmueble:
+                                            <i class="fa fa-question-circle float-right" title="Establecer el numero de propiedad (si corresponde)"></i>
+                                        </label>
+                                        <input type="text" value="{{old('pro_nro_inmueble')}}" name="pro_nro_inmueble" class="form-control @error('pro_nro_inmueble') is-invalid @enderror" placeholder="Nro del inmueble">
+                                        @error('pro_nro_inmueble')
+                                        <div class="invalid-feedback">
+                                            {{$message}}
+                                        </div>											
+                                        @enderror
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">

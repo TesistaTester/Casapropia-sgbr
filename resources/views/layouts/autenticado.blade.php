@@ -26,6 +26,16 @@
     <script src="{{url('js/bootstrap-multiselect.min.js')}}"></script>
     <script src="{{url('js/select2.min.js')}}"></script>
 
+    <script src="{{url('js/tinymce/tinymce.min.js')}}" referrerpolicy="origin"></script>
+    <script>
+      tinymce.init({
+        selector: '#editorhtml',
+        license_key: 'gpl',
+        language_url: "{{url('js/tinymce/langs/es.js')}}",
+        language: 'es_Es',
+        language_load: false, 
+      });
+    </script>
 
 </head>
 <body>
@@ -124,12 +134,13 @@
                         {{-- @if(session('rol_id') == 3) --}}
                         <a class="nav-item nav-link @if($modulo_activo == 'urbanizaciones'): active @endif" href="{{url('urbanizaciones')}}"><i class="fa fa-building"></i> URBANIZACIONES</a>
                         {{-- @endif --}}
+                        {{-- <a class="nav-item nav-link @if($modulo_activo == 'clientes'): active @endif" href="{{url('clientes')}}"><i class="fa fa-id-card"></i> CLIENTES</a>
+                        <a class="nav-item nav-link @if($modulo_activo == 'ventas'): active @endif" href="{{url('ventas')}}"><i class="fa fa-map"></i> VENTAS</a> --}}
                         <a class="nav-item nav-link @if($modulo_activo == 'propietarios'): active @endif" href="{{url('propietarios')}}"><i class="fa fa-key"></i> PROPIETARIOS</a>
-                        <a class="nav-item nav-link @if($modulo_activo == 'clientes'): active @endif" href="{{url('clientes')}}"><i class="fa fa-id-card"></i> CLIENTES</a>
-                        <a class="nav-item nav-link @if($modulo_activo == 'reservas'): active @endif" href="{{url('reservas')}}"><i class="fa fa-tag"></i> RESERVAS</a>
+                        {{-- <a class="nav-item nav-link @if($modulo_activo == 'reservas'): active @endif" href="{{url('reservas')}}"><i class="fa fa-tag"></i> RESERVAS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'contratos'): active @endif" href="{{url('contratos')}}"><i class="fa fa-file"></i> CONTRATOS</a>
                         <a class="nav-item nav-link @if($modulo_activo == 'usuarios'): active @endif" href="{{url('usuarios')}}"><i class="fa fa-users"></i> USUARIOS</a>
-                        <a class="nav-item nav-link @if($modulo_activo == 'reportes'): active @endif" href="{{url('reportes')}}"><i class="fa fa-line-chart"></i> REPORTES</a>
+                        <a class="nav-item nav-link @if($modulo_activo == 'reportes'): active @endif" href="{{url('reportes')}}"><i class="fa fa-line-chart"></i> REPORTES</a> --}}
                     </nav>
     
                 <div class="box-copyright">

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdjuntoPropiedad;
+use App\Http\Controllers\AdjuntoPropiedadController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UrbanizacionController;
@@ -21,11 +23,13 @@ use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CaptchaTest;
+use App\Http\Controllers\VentasController;
 //storage
 use Illuminate\Support\Facades\Storage;
 //Mail
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use App\Models\AdjuntoContrato;
 //codigos QR
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -70,11 +74,20 @@ Route::get('/inicio', [DashboardController::class ,'index']);
 Route::post('/urbanizaciones/get_man_by_urb_json', [UrbanizacionController::class, 'get_manzanos_by_urbanizacion_json']);
 Route::post('/urbanizaciones/{id}/store_plano_inicial', [UrbanizacionController::class, 'store_plano_inicial']);
 Route::resource('/urbanizaciones', UrbanizacionController::class);
+
+/*
+----------------------------------------
+* RUTAS: Ventas
+----------------------------------------
+*/
+Route::resource('/ventas', VentasController::class);
+
 /*
 ----------------------------------------
 * RUTAS: Manzanos
 ----------------------------------------
 */
+Route::post('/manzanos/get_lot_by_man_json_contratos', [ManzanoController::class, 'get_lotes_by_manzano_json_contratos']);
 Route::post('/manzanos/get_lot_by_man_json', [ManzanoController::class, 'get_lotes_by_manzano_json']);
 Route::get('/manzanos/nuevo/urb/{id}', [ManzanoController::class ,'nuevo_manzano_urbanizacion']);
 Route::resource('/manzanos', ManzanoController::class);
@@ -83,6 +96,10 @@ Route::resource('/manzanos', ManzanoController::class);
 * RUTAS: Lotes
 ----------------------------------------
 */
+Route::delete('/lotes/eliminar_adjunto/{id}', [AdjuntoPropiedadController::class ,'destroy']);
+Route::get('/lotes/edit_adjunto/{id}', [AdjuntoPropiedadController::class ,'store_adjunto_propiedad']);
+Route::post('/lotes/store_adjunto', [AdjuntoPropiedadController::class ,'store_adjunto_propiedad']);
+Route::get('/lotes/{id}/nuevo_adjunto', [AdjuntoPropiedadController::class ,'nuevo_adjunto_propiedad']);
 Route::post('/lotes/asignar_prr/{id}', [AsignacionPrrController::class ,'guardar_asignacion_propietario_real']);
 Route::post('/lotes/editar_prr/{id}', [AsignacionPrrController::class ,'editar_asignacion_propietario_real']);
 Route::post('/lotes/eliminar_apr/{id}', [AsignacionPrrController::class ,'eliminar_asignacion_propietario_real']);

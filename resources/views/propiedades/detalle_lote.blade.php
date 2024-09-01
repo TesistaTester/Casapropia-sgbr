@@ -18,6 +18,7 @@
                 <a class="nav-link" id="v-disponibilidad-tab" data-toggle="pill" href="#v-disponibilidad" role="tab" aria-controls="v-disponibilidad" aria-selected="false"><i class="fa fa-check"></i> Estados</a>
                 <a class="nav-link" id="v-propietarios-tab" data-toggle="pill" href="#v-propietarios" role="tab" aria-controls="v-propietarios" aria-selected="true"><i class="fa fa-users"></i> Propietarios</a>
                 <a class="nav-link" id="v-contratos-tab" data-toggle="pill" href="#v-contratos" role="tab" aria-controls="v-contratos" aria-selected="false"><i class="fa fa-file"></i> Contratos</a>
+                <a class="nav-link" id="v-adjuntos-tab" data-toggle="pill" href="#v-adjuntos" role="tab" aria-controls="v-adjuntos" aria-selected="false"><i class="fa fa-folder-open"></i> Documentos adjuntos</a>
             </div>
         </div>
     </div>
@@ -26,8 +27,8 @@
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-general" role="tabpanel" aria-labelledby="v-general-tab">
                     <h3 class="subtitle-header"><i class="fa fa-database"></i> DATOS GENERALES
-                        <a href="#" title="Eliminar propiedad" data-toggle="modal" data-target="#modal-eliminar-lote" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
-                        <a href="{{url('lotes/'.$lote->lot_id.'/editar')}}" title="Editar datos del lote" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a>
+                        {{-- <a href="#" title="Eliminar propiedad" data-toggle="modal" data-target="#modal-eliminar-lote" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
+                        <a href="{{url('lotes/'.$lote->lot_id.'/editar')}}" title="Editar datos del lote" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a> --}}
                     </h3>
                     <div class="row">
                         <div class="col-md-12">
@@ -119,6 +120,28 @@
                                                     </h5>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <h5 class="card-title"><span class="text-success">NRO DE INMUEBLE:</span> <br>
+                                                        @if(Str::of($propiedad->pro_nro_inmueble)->trim()->isEmpty())
+                                                        <small>[No definido]</small>
+                                                        @else
+                                                        {{$lote->propiedad->pro_nro_inmueble}}
+                                                        @endif
+                                                    </h5>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <h5 class="card-title"><span class="text-success">BASE IMPONIBLE:</span> <br>
+                                                        @if(Str::of($propiedad->pro_base_imponible)->trim()->isEmpty())
+                                                        <small>[No definido]</small>
+                                                        @else
+                                                        {{$propiedad->pro_base_imponible}}
+                                                        @endif
+                                                        
+                                                    </h5>
+                                                </div>
+                                            </div>
+
                                   </div>
                                 </div>
                               </div>
@@ -716,8 +739,84 @@
                         </div>
                     </div>
                     <!-- fin card  -->
-
                 </div>
+
+                <div class="tab-pane fade" id="v-adjuntos" role="tabpanel" aria-labelledby="v-adjuntos">
+                    <h3 class="subtitle-header"><i class="fa fa-folder-open"></i>
+                        DOCUMENTOS ADJUNTOS DEL LOTE
+                        <a href="{{url('lotes/'.Crypt::encryptString($lote->lot_id).'/nuevo_adjunto')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVA DOCUMENTO ADJUNTO</a>
+                    </h3>
+                    <div class="alert alert-info alert-not-persistent">
+                        <div class="media">
+                            <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
+                            <div class="media-body">
+                                <h5 class="mt-0">Nota.-</h5>
+                                <ul>
+                                    <li>
+                                    La propiedad puede tener documentos adjuntos digitalizados, como el folio real, impuestos, entre otros.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- inicio card  -->
+                    <div class="card card-stat">
+                        <div class="card-body">
+                            @if($adjuntos->count() == 0)
+                            <div class="alert alert-info">
+                                <div class="media">
+                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
+                                    <div class="media-body">
+                                        <h5 class="mt-0">Nota.-</h5>
+                                        <p>
+                                            La propiedad NO tiene documentos adjuntos registrados. 
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            @else
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">DESCRIPCION DEL DOCUMENTO</th>
+                                    <th class="text-center">ENLACE</th>
+                                    <th class="text-center">FECHA Y HORA DE CARGA</th>
+                                    <th class="text-center">OPCION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($adjuntos as $item)
+                                <tr>
+                                    <td class="text-center">{{$item->apo_descripcion}}</td>
+                                    <td class="text-center">
+                                        <a target="_blank" href="{{asset('storage/'.$item->apo_ruta)}}" class="btn btn-sm btn-link">
+                                            <i class="fa fa-file"></i> Ver documento
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        {{$item->updated_at}}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            OPCION
+                                          </button>
+                                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item btn-eliminar-adjunto" data-apo-id="{{Crypt::encryptString($item->apo_id)}}" data-apo-descripcion="{{$item->apo_descripcion}}" data-toggle="modal" data-target="#modal-eliminar-adjunto" href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                          </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- fin card  -->
+                </div>
+                
+
             </div>
         </div>
     </div>
@@ -829,7 +928,7 @@
                             Algún comentario adicional sobre la asignación:
                             <i class="fa fa-question-circle float-right" title="Establecer alguna descripcion o comentario adicional"></i>
                         </label>
-                        <textarea class="form-control" id="apr_descripcion" name="apr_descripcion"></textarea>
+                        <textarea required class="form-control" id="apr_descripcion" name="apr_descripcion"></textarea>
                     </div>                    
                 </div>
               </div>
@@ -955,7 +1054,7 @@
                             Algún comentario adicional sobre la asignación:
                             <i class="fa fa-question-circle float-right" title="Establecer alguna descripcion o comentario adicional"></i>
                         </label>
-                        <textarea class="form-control" id="apl_descripcion" name="apl_descripcion"></textarea>
+                        <textarea required class="form-control" id="apl_descripcion" name="apl_descripcion"></textarea>
                     </div>                    
 
                   </div>
@@ -1388,6 +1487,54 @@
   </div>
   {{-- FIN MODAL: ELIMINAR MODALIDAD --}}
 
+{{-- INICIO MODAL: ELIMINAR ADJUNTO --}}
+<div class="modal fade" id="modal-eliminar-adjunto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-trash"></i>
+              Eliminar documento adjunto
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="box-data-xtra">
+                <h5>
+                    <span class="text-success">DOCUMENTO: </span>
+                    <span id="txt-descripcion"></span><br>
+                </h5>
+            </div>
+            <div class="alert alert-danger">
+                <div class="media">
+                    <img src="{{asset('img/alert-danger.png')}}" class="align-self-center mr-3" alt="...">
+                    <div class="media-body">
+                        <h5 class="mt-0">Cuidado.-</h5>
+                        <p>
+                            ¿Está seguro que desea eliminar éste registro?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
+          <form id="form-eliminar-adjunto" action="{{url('lotes/eliminar_adjunto')}}" method="post">
+            @method('delete')
+            @csrf
+            {{-- <input type="hidden" name="lot_id" value="{{Crypt::encryptString($lote->lot_id)}}"> --}}
+            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Si, eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: ELIMINAR ADJUNTO --}}
+
+
 {{-- INICIO MODAL: ELIMINAR ESTADO --}}
 <div class="modal fade" id="modal-eliminar-estado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -1600,6 +1747,22 @@ $(function(){
        action = action+'/'+mov_id;
        $('#form-eliminar-modalidad').attr('action',action);
    });
+
+    /*
+    --------------------------------------------------------------
+    ELIMINAR ADJUNTO
+    --------------------------------------------------------------
+    */
+    $('.btn-eliminar-adjunto').click(function(){
+       let apo_id = $(this).attr('data-apo-id');
+       let apo_descripcion = $(this).attr('data-apo-descripcion');
+       $('#txt-descripcion').html(apo_descripcion);
+       //form data
+       action = $('#form-eliminar-adjunto').attr('action');
+       action = action+'/'+apo_id;
+       $('#form-eliminar-adjunto').attr('action',action);
+   });
+
 
     /*
     --------------------------------------------------------------

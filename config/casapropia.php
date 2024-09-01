@@ -8,6 +8,7 @@ return [
     'TIEMPO_EXPIRACION_PASSWORD' => 60,//Expresado en días
     'TIEMPO_EXPIRACION_RESERVA' => 20,//Expresado en dias
     'TIEMPO_AMPLIACION_RESERVA' => 10,//Expresado en dias
+    'GOOGLE_MAPS_API_KEY' => 'AIzaSyAAtnmKYcYoy-wxOBHxd3YCz_KWP0MQiKU' //Clave de GMaps Usuario: Tester
 ];
 
 ?>

@@ -12,6 +12,7 @@ use App\Models\Estado_disponibilidad;
 use App\Models\Estado_propiedad;
 use App\Models\Propietario_real;
 use App\Models\Propietario_legal;
+use Brick\Math\BigInteger;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 
@@ -82,6 +83,8 @@ class LoteController extends Controller
         $propiedad->pro_superficie = $request->input('pro_superficie');
         $propiedad->pro_muro_perimetral = $request->input('pro_muro_perimetral');
         $propiedad->pro_descripcion = $request->input('pro_descripcion');
+        $propiedad->pro_base_imponible = $request->input('pro_base_imponible');
+        $propiedad->pro_nro_inmueble = $request->input('pro_nro_inmueble');
         $propiedad->save();
         //guardar lote
         $lote = new Lote();
@@ -122,16 +125,20 @@ class LoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, Request $request)
+    public function show(Request $request, $id)
     {
-        $ip = $request->ip();
+        // $ip = $request->ip();
+        // echo "EL id antes de desencriptar: ".$id;
         $id = Crypt::decryptString($id);//Desencriptando parametro ID
+        // echo "<br>EL id antes es: ".$id;
         $lote = Lote::where('lot_id', $id)->first();
+        // echo "<br>EL id despues es: ".$id;
         $propiedad = $lote->propiedad;
         $manzano = $lote->manzano;
         $urbanizacion = $manzano->urbanizacion;
         $modalidades = $propiedad->modalidades_venta->sortByDesc('created_at');
         $estados = $propiedad->estados->sortByDesc('created_at');
+        $adjuntos = $propiedad->adjuntos;
 
         //contratos de la propiedad
         // $contratos = $propiedad->contratos;
@@ -168,7 +175,8 @@ class LoteController extends Controller
                                                  'prr_asignados' => $propietarios_reales_asignados,
                                                  'porcentaje_disponible' => $porcentaje_disponible,
                                                  'contratos'=>$contratos,
-                                                 'ip'=>$ip
+                                                 'adjuntos'=>$adjuntos,
+                                                //  'ip'=>$ip
                                                 ]);
     }
 

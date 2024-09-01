@@ -17,9 +17,9 @@
 					<div class="row no-gutters">
 						<div class="col-md-12">
 							<div class="card-body">
-								<form enctype="multipart/form-data" id="form-nuevo-cliente" action="{{url('clientes')}}" method="POST" data-validation1="{{url('clientes/valida_cliente')}}">
+								<form id="form-nuevo-cliente" action="{{url('contratos')}}" method="POST">
 								  @csrf
-									<div class="alert alert-info">
+									{{-- <div class="alert alert-info">
 										<div class="media">
 											<img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
 											<div class="media-body">
@@ -33,7 +33,7 @@
 												</p>
 											</div>
 										</div>
-									</div>
+									</div> --}}
 								  
 									<section id="seccion-datos-generales">
 										<h4 class="card-title"><strong><span class="text-primary">
@@ -65,14 +65,14 @@
 															@enderror
 														</div>
 													</div>
-													<div class="col-md-3">
+													<div class="col-md-2">
 														<div class="form-group">
 															<label class="label-blue label-block" for="">
 																Manzano:
 																<span class="text-danger">*</span>
 																<i class="fa fa-question-circle float-right" title="Seleccione el manzano al que pertenece la propiedad"></i>
 															</label>
-															<select required name="man_id" id="man_id" class="form-control @error('man_id') is-invalid @enderror" data-get-lotes-json="{{url('manzanos/get_lot_by_man_json')}}">
+															<select required name="man_id" id="man_id" class="form-control @error('man_id') is-invalid @enderror" data-get-lotes-json="{{url('manzanos/get_lot_by_man_json_contratos')}}">
 																<option value="">Seleccione una opción</option>
 															</select>
 															@error('man_id')
@@ -82,7 +82,7 @@
 															@enderror
 														</div>
 													</div>
-													<div class="col-md-3">
+													<div class="col-md-2">
 														<div class="form-group">
 															<label class="label-blue label-block" for="">
 																Lote:
@@ -106,239 +106,190 @@
 																<span class="text-danger">*</span>
 																<i class="fa fa-question-circle float-right" title="Modalidad de venta de la propiedad"></i>
 															</label>
-															<input type="text" class="form-control" id="res_modalidad" name="res_modalidad" readonly>
-															@error('res_modalidad')
+															<select required name="con_tipo_venta" id="con_tipo_venta" class="form-control @error('lot_id') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+																<option value="0">AL CONTADO</option>
+																<option value="1">A PAGOS</option>
+																<option value="2">A CREDITO</option>
+															</select>
+															@error('con_tipo_venta')
 															<div class="invalid-feedback">
 																{{$message}}
 															</div>											
 															@enderror
 														</div>
 													</div>
-												</div>
-											</div>
-										</div>
-									  </section>
-	
-								  <section id="seccion-datos-personales">
-									<h4 class="card-title"><strong><span class="text-primary">
-										<i class="fa fa-database"></i>
-										Datos personales <span id="txt-representante-empresa"></span>
-									</span></strong></h4>
-									<hr>
-									<div class="row">
-										<div class="col-md-8">
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
+													<div class="col-md-2">
+														<div class="form-group">
 															<label class="label-blue label-block" for="">
-																Tipo de documento:
+																Tasa de interes:
 																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el tipo de documento de la persona"></i>
+																<i class="fa fa-question-circle float-right" title="Tasa de interes para la venta de la propiedad. Este valor debe oscilar entre 0 y 1. Por ejemplo: 5% = 0.05, 15% = 0.15"></i>
 															</label>
-														<select required name="per_tipo_documento" id="per_tipo_documento" class="form-control @error('per_tipo_documento') is-invalid @enderror">
-															<option value="">Seleccione una opción</option>
-															<option value="0" {{ old('per_tipo_documento') == '0' ? 'selected' : '' }}>Cédula de identidad</option>
-															<option value="1" {{ old('per_tipo_documento') == '1' ? 'selected' : '' }}>Libreta de servicio militar</option>
-															<option value="2" {{ old('per_tipo_documento') == '2' ? 'selected' : '' }}>Otro</option>
-														</select>
-														@error('per_tipo_documento')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
+															<input required type="number" min="0" step="0.01" value="{{old('con_interes')}}" class="form-control @error('con_interes') is-invalid @enderror" name="con_interes" id="con_interes" placeholder="Tasa interes">
+															@error('con_interes')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+														</div>
 													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Número de documento de identificación:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el número de documento de identificación de la persona"></i>
-															</label>
-														<input required type="text" value="{{old('per_nro_id')}}" class="form-control @error('per_nro_id') is-invalid @enderror" name="per_nro_id" id="per_nro_id" placeholder="Número de documento">
-														@error('per_nro_id')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Expedido en:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el lugar donde fue expedido el documento"></i>
-															</label>
-														<select required class="form-control @error('per_expedido') is-invalid @enderror" name="per_expedido" id="per_expedido">
-															<option value="">Seleccione una opción</option>
-															<option value="LP" {{ old('per_expedido') == 'LP' ? 'selected' : '' }}>LA PAZ</option>
-															<option value="OR"{{ old('per_expedido') == 'OR' ? 'selected' : '' }}>ORURO</option>
-															<option value="PT"{{ old('per_expedido') == 'PT' ? 'selected' : '' }}>POTOSÍ</option>
-															<option value="CB"{{ old('per_expedido') == 'CB' ? 'selected' : '' }}>COCHABAMBA</option>
-															<option value="CH"{{ old('per_expedido') == 'CH' ? 'selected' : '' }}>CHUQUISACA</option>
-															<option value="TJ"{{ old('per_expedido') == 'TJ' ? 'selected' : '' }}>TARIJA</option>
-															<option value="PN"{{ old('per_expedido') == 'PN' ? 'selected' : '' }}>PANDO</option>
-															<option value="BN"{{ old('per_expedido') == 'BN' ? 'selected' : '' }}>BENI</option>
-															<option value="SC"{{ old('per_expedido') == 'SC' ? 'selected' : '' }}>SANTA CRUZ</option>
-														</select>
-														@error('per_expedido')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Nombres:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer los nombres de las personas"></i>
-															</label>
-														<input required type="text" value="{{old('per_nombres')}}" class="form-control @error('per_nombres') is-invalid @enderror" name="per_nombres" id="per_nombres" placeholder="Nombres">
-														@error('per_nombres')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Primer apellido:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el primer apellido de la persona"></i>
-															</label>
-														<input required type="text" value="{{old('per_primer_apellido')}}" class="form-control @error('per_primer_apellido') is-invalid @enderror" name="per_primer_apellido" id="per_primer_apellido" placeholder="Primer apellido">
-														@error('per_primer_apellido')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Segundo apellido:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el segundo apellido de la persona"></i>
-															</label>
-														<input required type="text" value="{{old('per_segundo_apellido')}}" class="form-control @error('per_segundo_apellido') is-invalid @enderror" name="per_segundo_apellido" id="per_segundo_apellido" placeholder="Segundo apellido">
-														@error('per_segundo_apellido')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Fecha de nacimiento:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer la fecha de nacimiento de la persona"></i>
-															</label>
-														<input required type="date" value="{{old('per_fecha_nacimiento')}}" class="form-control @error('per_fecha_nacimiento') is-invalid @enderror" name="per_fecha_nacimiento" id="per_fecha_nacimiento" placeholder="Fecha de nacimiento">
-														@error('per_fecha_nacimiento')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Género:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el género de la persona"></i>
-															</label>
-															<select required class="form-control @error('per_sexo') is-invalid @enderror" name="per_sexo" id="per_sexo">
-																<option value="">Seleccione una opción</option>
-																<option value="M" {{ old('per_sexo') == 'M' ? 'selected' : '' }}>Masculino</option>
-																<option value="F" {{ old('per_sexo') == 'F' ? 'selected' : '' }}>Femenino</option>
-																<option value="O" {{ old('per_sexo') == 'O' ? 'selected' : '' }}>Otro</option>
-															</select>
-															@error('per_sexo')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-															<label class="label-blue label-block" for="">
-																Estado civil:
-																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Establecer el estado civil de la persona"></i>
-															</label>
-															<select required class="form-control @error('per_estado_civil') is-invalid @enderror" name="per_estado_civil" id="per_estado_civil">
-																<option value="">Seleccione una opción</option>
-																<option value="0" {{ old('per_estado_civil') == '0' ? 'selected' : '' }}>Soltero</option>
-																<option value="1" {{ old('per_estado_civil') == '1' ? 'selected' : '' }}>Casado</option>
-																<option value="2" {{ old('per_estado_civil') == '2' ? 'selected' : '' }}>Concubinato</option>
-																<option value="3" {{ old('per_estado_civil') == '3' ? 'selected' : '' }}>Viudo</option>
-																<option value="4" {{ old('per_estado_civil') == '4' ? 'selected' : '' }}>Divorciado</option>
-																<option value="5" {{ old('per_estado_civil') == '5' ? 'selected' : '' }}>Otro</option>
-															</select>
-														@error('per_estado_civil')
-														<div class="invalid-feedback">
-															{{$message}}
-														</div>											
-														@enderror
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="col-md-4">
-											<div class="row">
-												<div class="col-md-12">
-													<label class="label-blue label-block" for="">
-														Fotografía cliente:
-														<span class="text-danger">*</span>
-														<i class="fa fa-question-circle float-right" title="Establecer la fotografía del cliente"></i>
-													</label>
-													<div class="text-center">
-														<img src="{{asset('img/default.jpg')}}" id="preview" class="img-thumbnail" style="width:60%; margin-bottom:7px;">
-													</div>
-													<input required type="file" name="cli_foto" id="cli_foto" class="form-control file @error('cli_copia_ci') is-invalid @enderror" accept="image/*">
-													{{-- <div class="input-group my-3">
-													  <input type="text" name="cli_foto_text" class="form-control" disabled placeholder="Seleccionar foto" id="file">
-													  <div class="input-group-append">
-														<button type="button" class="browse btn btn-primary"><i class="fa fa-camera"></i></button>
-													  </div>
-													</div> --}}
-													@error('cli_foto')
-													<div class="invalid-feedback">
-														{{$message}}
-													</div>											
-													@enderror
 
 												</div>
 											</div>
-											<br>
+										</div>
+								  </section>
+	
+								  <section id="seccion-datos-contrato">
+									<h4 class="card-title"><strong><span class="text-primary">
+										<i class="fa fa-file"></i>
+										Datos del contrato <span id="txt-representante-empresa"></span>
+									</span></strong></h4>
+									<hr>
+									<div class="row">
+										<div class="col-md-12">
 											<div class="row">
-												<div class="col-md-12">
+												<div class="col-md-3">
 													<div class="form-group">
 															<label class="label-blue label-block" for="">
-																Documento de identificación PDF:
+																Codigo de Contrato
 																<span class="text-danger">*</span>
-																<i class="fa fa-question-circle float-right" title="Cargar el PDF escaneado del documento de identificación del cliente. Si fuera más de un documento, escanear varios archivos físicos en un solo PDF."></i>
+																<i class="fa fa-question-circle float-right" title="Establecer el codigo de contrato"></i>
 															</label>
-														<input required type="file" value="{{old('cli_copia_ci')}}" accept="application/pdf" class="form-control @error('cli_copia_ci') is-invalid @enderror" name="cli_copia_ci" id="cli_copia_ci" placeholder="PDF documento identificación">
-														@error('cli_copia_ci')
+														<input required type="text" value="{{old('con_codigo_contrato')}}" class="form-control @error('con_codigo_contrato') is-invalid @enderror" name="con_codigo_contrato" id="con_codigo_contrato" placeholder="Codigo contrato">
+														@error('con_codigo_contrato')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Número de contrato
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el numero de contrato"></i>
+															</label>
+														<input required type="text" value="{{old('con_nro_contrato')}}" class="form-control @error('con_nro_contrato') is-invalid @enderror" name="con_nro_contrato" id="con_nro_contrato" placeholder="Nro de contrato">
+														@error('con_nro_contrato')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Precio total:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el total de venta de la propiedad"></i>
+															</label>
+														<input required type="text" value="{{old('con_precio_total')}}" class="form-control @error('con_precio_total') is-invalid @enderror" name="con_precio_total" id="con_precio_total" placeholder="Precio total">
+														@error('con_precio_total')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-3">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Moneda:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el número de documento de identificación de la persona"></i>
+															</label>
+															<select required name="con_moneda" id="con_moneda" class="form-control @error('con_moneda') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+																<option value="0">BOLIVIANOS</option>
+																<option value="1">DOLARES</option>
+															</select>
+															@error('con_moneda')
+															<div class="invalid-feedback">
+																{{$message}}
+															</div>											
+															@enderror
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Pago inicial:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el número de documento de identificación de la persona"></i>
+															</label>
+														<input required type="number" value="{{old('con_pago_inicial')}}" class="form-control @error('con_pago_inicial') is-invalid @enderror" name="con_pago_inicial" id="con_pago_inicial" placeholder="Pago inicial">
+														@error('con_pago_inicial')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Plazo (en meses):
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el plazo de la venta (en meses, si corresponde)"></i>
+															</label>
+														<input required type="number" value="{{old('con_plazo')}}" class="form-control @error('con_plazo') is-invalid @enderror" name="con_plazo" id="con_plazo" placeholder="Plazo en meses">
+														@error('con_plazo')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Tasa de cambio:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer la tasa de cambio aceptada en el contrato"></i>
+															</label>
+														<input required type="number" step=".1" value="{{old('con_tasa_cambio')}}" class="form-control @error('con_tasa_cambio') is-invalid @enderror" name="con_tasa_cambio" id="con_tasa_cambio" placeholder="Tasa de cambio">
+														@error('con_tasa_cambio')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+											</div>
+
+											<div class="row">
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Tipo de contrato:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el tipo de contrato. Este formulario esta predeterminado para los contratos de compra-venta."></i>
+															</label>
+															<select required name="con_tipo" id="con_tipo" class="form-control @error('con_tipo') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+																<option value="0" selected>COMPRA/VENTA</option>
+															</select>
+														@error('con_tipo')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Fecha de contrato:
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer la fecha de contrato."></i>
+															</label>
+														<input required type="date" value="{{old('con_fecha_contrato', date('Y-m-d'))}}" class="form-control @error('con_fecha_contrato') is-invalid @enderror" name="con_fecha_contrato" id="con_fecha_contrato" placeholder="Fecha de contrato">
+														@error('con_fecha_contrato')
 														<div class="invalid-feedback">
 															{{$message}}
 														</div>											
@@ -348,16 +299,99 @@
 											</div>
 										</div>
 									</div>
+								  </section>
 
-
-									{{-- <div class="row">
-										<div class="col-md-4 offset-md-8 text-right">
-											<button type="submit" href="#" id="next-domicilio" class="btn btn-secondary">
-													Siguiente
-													<i class="fa fa-chevron-right"></i>
-											</button>
+								  <section id="seccion-datos-clientes">
+									<h4 class="card-title"><strong><span class="text-primary">
+										<i class="fa fa-users"></i>
+										Datos de los firmantes
+									</span></strong></h4>
+									<hr>
+									<div><small>Seleccione los cliente(s) y propietario(s) que realizarán la firma del contrato</small></div>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Clientes
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el número de documento de identificación de la persona"></i>
+															</label>
+															<select required name="cli_id[]" id="cli_id" multiple="multiple" class="form-control search-items @error('ple_id') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+																@foreach($clientes as $item)
+																<option value="{{$item->cli_id}}" {{ old('cli_id') == $item->cli_id ? 'selected' : '' }}>{{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}} - Doc.ID.: {{$item->persona->per_nro_id}}</option>
+																@endforeach
+															</select>			
+														@error('cli_id')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-6">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Propietario(s)
+																<span class="text-danger">*</span>
+																<i class="fa fa-question-circle float-right" title="Establecer el número de documento de identificación de la persona"></i>
+															</label>
+															<select required name="ple_id[]" id="ple_id" multiple="multiple" class="form-control search-items @error('ple_id') is-invalid @enderror">
+																<option value="">Seleccione una opción</option>
+																@foreach($propietarios as $item)
+																<option value="{{$item->ple_id}}" {{ old('ple_id') == $item->ple_id ? 'selected' : '' }}>{{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}} - Doc.ID.: {{$item->persona->per_nro_id}}</option>
+																@endforeach
+															</select>			
+														@error('ple_id')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+											</div>
 										</div>
-									</div> --}}
+									</div>
+								  </section>
+								  <hr>
+								  <section id="pasos-contrato">
+										<div class="row">
+											<div class="col-md-4 text-center">
+												<div class="alert alert-secondary">
+													<div id="generador_planes">
+														<small>Para continuar, debe <b>Generar el plan de pagos</b>.
+														</small>
+													</div>
+													<button type="button" class="btn" id="btn-genera-plan-pagos" data-toggle="modal" data-target="#modal-generar-plan" href="#">
+														<i class="fa fa-cogs"></i>
+														Generar el plan de pagos
+													</button>	
+												</div>
+											</div>
+											<div class="col-md-4 text-center">
+												<div class="alert alert-secondary">
+													<div id="contrato_editor">
+													<small>Luego, debe <b>Editar el borrador del contrato</b></small>
+												  </div>
+												  <button id="btn-editar-borrador" type="button" class="btn" href="#">
+													<i class="fa fa-edit"></i>
+													Editar borrador de contrato
+												  </button>		
+												</div>
+											</div>
+											<div class="col-md-4 text-center">
+												<div class="alert alert-secondary">
+													<small>Para finalizar, puede <b>Guardar datos del contrato</b></small>
+													<input type="text" id="campo_plan_pagos" name="campo_plan_pagos">
+													<button type="submit" class="btn" id="btn-enviar">
+														<i class="fa fa-save"></i>
+														Guardar datos
+													</button>
+												</div>
+											</div>
+										</div>	
 								  </section>
 
 
@@ -372,6 +406,11 @@
 			</div>
 		</div>
 	</div>
+
+	<section id="redac_contrato">
+
+		
+	</section>
 
 
   {{-- INICIO MODAL: EXISTE PROPIETARIO / AUTOCOMPLETAR FORMULARIO --}}
@@ -433,12 +472,424 @@
   </div>
   {{-- FIN MODAL: EXISTE PROPIETARIO / AUTOCOMPLETAR FORMULARIO --}}
 
+  {{-- INICIO MODAL: GENERAR PLAN DE PAGOS --}}
+  <div class="modal fade" id="modal-generar-plan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-cogs"></i>
+              Generar plan de pagos
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+			<table class="table table-bordered">
+				<tr>
+					<td class="text-primary">PRECIO DE VENTA:</td>
+					<td id="txt_monto">4500</td>
+					<td class="text-primary">MONEDA:</td>
+					<td id="txt_moneda">dolare</td>
+					<td class="text-primary">MODALIDAD:</td>
+					<td id="txt_modalidad">A PAGOS</td>
+				</tr>
+				<tr>
+					<td class="text-primary">MESES PLAZO:</td>
+					<td id="txt_meses"></td>
+					<td class="text-primary">CUOTA INICIAL:</td>
+					<td id="txt_cuota_inicial"></td>
+					<td class="text-primary">TASA DE INTERÉS:</td>
+					<td id="txt_interes"></td>
+				</tr>
+			</table>
+			<table class="table table-sm table-bordered">
+				<thead>
+					<tr>
+						<td>NRO</td>
+						<td>FECHA</td>
+						<td>MONTO PAGO (USD)</td>
+						<td>MONTO PAGO (Bs)</td>
+						<td>INTERES MESUAL</td>
+						<td>AMORTIZACION</td>
+						<td>SALDO</td>
+						<td>OBSERVACION</td>
+					</tr>
+				</thead>
+				<tbody id="tabla-plan-pagos">
+					<tr>
+						<td>1</td>
+						<td>01-08-2024</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+						<td>0</td>
+					</tr>	
+				</tbody>
+			</table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-entendido" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" id="btn-guarda-plan-pagos" class="btn btn-success" data-dismiss="modal">
+			<i class="fa fa-check"></i>
+			Guardar plan de pagos
+		  </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: GENERAR PLAN DE PAGOS --}}
+
+
+  {{-- INICIO MODAL: DESCRIPCION DEL CONTRATO --}}
+  <div class="modal fade" id="modal-descripcion-contrato" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-edit"></i>
+              Editar borrador del contrato
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+			<textarea id="editorhtml">	
+				<div>
+					<p style="text-align: center"><strong>DOCUMENTO PRIVADO DE COMPRAVENTA DE LOTE DE TERRENO</strong></p>
+				
+					<p>
+						Conste por el presente documento privado que en el caso necesario podrá ser elevado a la categoria de instrumento publico con solo el reconocimiento de firmas y rubricas suscrito entre las personas que se mencionará mas adelante de conformidad a las siguientes clausulas:					
+					</p>				
+					
+					<p><strong>PRIMERA.-</strong> Yo <span id="doc-propietario"></span>, mayor de edad, habil por derecho declaro ser propietaria de un lote de terreno de una extension superficial de <span id="doc-superficie-terreno"></span> mts2 (<span id="doc-superficie-terreno-literal"></span> 00/100), ubicado en la Urbanización <span id="doc-urbanizacion"></span>, lote signado con el Nro <span id="doc-numero-lote"></span> del Manzano
+					<span id="doc-manzano"></span>, el mismo registrado en Derechos Reales.
+					</p>
+					
+					<p>
+					<strong>SEGUNDO.- </strong>A la fecha, por asi convenir asi a mis intereses, hago formal promesa de venta de un lote de terreno mencionado en la clausula primera en favor del señor NOMBRE CLIENTE, 
+					mayor de edad y habil por derecho, por el precio libremente convenido entre ambas partes de $US.- 4250 (CUATRO MIL DOSCIENTOS CINCUENTA 00/100 DOLARES AMERICANOS), de acuerdo a las siguientes condiciones.
+					</p>
+					
+					<p>
+					<strong>a)</strong> A tiempo de susribir el presente documento privado, los compradores he hacen la entrega total como anticipo del precio del lote de terreno, la suma de $US.- 500 (QUINIENTOS DOLARES AMERICANOS), 
+					valor que declaro recibir a tiempo de suscribir el presente documento.
+					</p>
+					<p>
+					<strong>b)</strong> El saldo de $US.- 3750 será abonado a mi favor en 36 cutas mensuales de 104 y/0 su equivalente en bolivianos a la fecha de pago, el saldo total debe ser cancelado hasta el 29 de abril de 2024, 
+					en caso de incumplimiento a esta clausula y la falta de pago de la cuota en la fecha señalada, el comprador se constituira en mora por el solo vencimiento del termino sin requerimiento de notificacion
+					alguna.
+					</p>
+					<p>
+					<strong>TERCERO.-</strong> Asi mismo, se conviene entre partes, que al incumplimiento del pago en la fecha señalada y constituirse en mora, se aplicará un incremento del 5% con relacion a la suma total 
+					de la cuota adeudadda, por concepto de resarcimiento de daños y prejuicios, conforme a lo previsto por el Art. 532 del Código civil.
+					</p>
+					<p>
+					<strong>CUARTO.-</strong> En el caso de que se incumpla con el pago de cuatro (4) cuotas de forma consecutiva, se recuelve el presente contrato por incumplimiento imputable a los compradores, al amparo del
+					Art. 569 del Código Civil. Sin embargo, existe la faculta de novacion conforme disponga la vendedora, asimismo se conviene entre paretes que no se hará la devolucion del monto aportad hasta....
+					</p>
+					<p>
+					<strong>QUINTO.-</strong> 
+					</p>
+					<p>
+					<strong>SEXTO.-</strong> Los compradores a partir de la fecha podrá entrar en posesion del lote de terreno y realizar cualquier construccion o mejor que crean conveniente.
+					</p>				
+					<p>
+					<strong>SEPTIMO.-</strong> Si por cualquier motivo el presente DOCUMENTO PRIVADO no llegara a alcanzar la categoria de instrumento publico, a solo reconocimiento de firmas y rubricas, el mismo tomará
+					la caracteristica de Documento Privado reconocido de conformidad al Ar. 1297 del Código Civil.
+					</p>
+					
+					<p>
+					<strong>OCTAVO.-</strong> Nosotros, los suscritos contratistas declaramos nuestra conformidad con todas y cada una de las clausulas precedentes y nos sometemos a su fiel y estricto cumplimiento.
+					</p>
+					
+					<p style="text-align: center">
+					En Alto, X de Y de Z
+					</p>
+						<table id="table-firmas" align="center" style="text-align: center">
+							<tr>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td style="padding:10px 50px">
+									<small>
+										NOMBRE PROPIETARIO
+										<br>
+										6855478LP
+										<br>
+										<strong>VENDEDOR(A)</strong>
+									</small>
+								</td>
+								<td style="padding:10px 50px">
+									<small>
+										NOMBRE COMPRADOR
+										<br>
+										6855478LP
+										<br>
+										<strong>COMPRADOR(A)</strong>									
+									</small>
+								</td>
+							</tr>
+						</table>
+				
+					</div>
+				
+			</textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btn-entendido" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" id="btn-guardar-edicion" class="btn btn-success" data-dismiss="modal">
+			<i class="fa fa-check"></i>
+			Guardar edición y continuar
+		  </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: DESCRIPCION DEL CONTRATO --}}
+
+<section id="box-contract" style="display: none">
+	<div>
+	<p style="text-align: center"><strong>DOCUMENTO PRIVADO DE COMPRAVENTA DE LOTE DE TERRENO</strong></p>
+
+	<p>
+		Conste por el presente documento privado que en el caso necesario podrá ser elevado a la categoria de instrumento publico con solo el reconocimiento de firmas y rubricas suscrito entre las personas que se mencionará mas adelante de conformidad a las siguientes clausulas:					
+	</p>				
 	
+	<p><strong>PRIMERA.-</strong> Yo <span id="doc-propietario"></span>, mayor de edad, habil por derecho declaro ser propietaria de un lote de terreno de una extension superficial de <span id="doc-superficie-terreno"></span> mts2 (<span id="doc-superficie-terreno-literal"></span> 00/100), ubicado en la Urbanización <span id="doc-urbanizacion"></span>, lote signado con el Nro <span id="doc-numero-lote"></span> del Manzano
+	<span id="doc-manzano"></span>, el mismo registrado en Derechos Reales.
+	</p>
+	
+	<p>
+	<strong>SEGUNDO.- </strong>A la fecha, por asi convenir asi a mis intereses, hago formal promesa de venta de un lote de terreno mencionado en la clausula primera en favor del señor NOMBRE CLIENTE, 
+	mayor de edad y habil por derecho, por el precio libremente convenido entre ambas partes de $US.- 4250 (CUATRO MIL DOSCIENTOS CINCUENTA 00/100 DOLARES AMERICANOS), de acuerdo a las siguientes condiciones.
+	</p>
+	
+	<p>
+	<strong>a)</strong> A tiempo de susribir el presente documento privado, los compradores he hacen la entrega total como anticipo del precio del lote de terreno, la suma de $US.- 500 (QUINIENTOS DOLARES AMERICANOS), 
+	valor que declaro recibir a tiempo de suscribir el presente documento.
+	</p>
+	<p>
+	<strong>b)</strong> El saldo de $US.- 3750 será abonado a mi favor en 36 cutas mensuales de 104 y/0 su equivalente en bolivianos a la fecha de pago, el saldo total debe ser cancelado hasta el 29 de abril de 2024, 
+	en caso de incumplimiento a esta clausula y la falta de pago de la cuota en la fecha señalada, el comprador se constituira en mora por el solo vencimiento del termino sin requerimiento de notificacion
+	alguna.
+	</p>
+	<p>
+	<strong>TERCERO.-</strong> Asi mismo, se conviene entre partes, que al incumplimiento del pago en la fecha señalada y constituirse en mora, se aplicará un incremento del 5% con relacion a la suma total 
+	de la cuota adeudadda, por concepto de resarcimiento de daños y prejuicios, conforme a lo previsto por el Art. 532 del Código civil.
+	</p>
+	<p>
+	<strong>CUARTO.-</strong> En el caso de que se incumpla con el pago de cuatro (4) cuotas de forma consecutiva, se recuelve el presente contrato por incumplimiento imputable a los compradores, al amparo del
+	Art. 569 del Código Civil. Sin embargo, existe la faculta de novacion conforme disponga la vendedora, asimismo se conviene entre paretes que no se hará la devolucion del monto aportad hasta....
+	</p>
+	<p>
+	<strong>QUINTO.-</strong> 
+	</p>
+	<p>
+	<strong>SEXTO.-</strong> Los compradores a partir de la fecha podrá entrar en posesion del lote de terreno y realizar cualquier construccion o mejor que crean conveniente.
+	</p>				
+	<p>
+	<strong>SEPTIMO.-</strong> Si por cualquier motivo el presente DOCUMENTO PRIVADO no llegara a alcanzar la categoria de instrumento publico, a solo reconocimiento de firmas y rubricas, el mismo tomará
+	la caracteristica de Documento Privado reconocido de conformidad al Ar. 1297 del Código Civil.
+	</p>
+	
+	<p>
+	<strong>OCTAVO.-</strong> Nosotros, los suscritos contratistas declaramos nuestra conformidad con todas y cada una de las clausulas precedentes y nos sometemos a su fiel y estricto cumplimiento.
+	</p>
+	
+	<p style="text-align: center">
+	En Alto, X de Y de Z
+	</p>
+		<table id="table-firmas" align="center" style="text-align: center">
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td style="padding:10px 50px">
+					<small>
+						NOMBRE PROPIETARIO
+						<br>
+						6855478LP
+						<br>
+						<strong>VENDEDOR(A)</strong>
+					</small>
+				</td>
+				<td style="padding:10px 50px">
+					<small>
+						NOMBRE COMPRADOR
+						<br>
+						6855478LP
+						<br>
+						<strong>COMPRADOR(A)</strong>									
+					</small>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+
+</section>	
 
 <script>
 $(function(){
 	//select2 buscador
-	$('.search-municipio, .search-actividad-economica').select2({language:"es"});
+	$('.search-items').select2({language:"es"});
+
+	$('#btn-genera-plan-pagos').click(function(e){
+		var data_plan = [];//vaciamos data_plan
+		var x = null;
+		$('#tabla-plan-pagos').html('');//vaciamos el html 
+		var fecha = new Date();
+		var iterador_meses = 0;
+		
+		// INICIO --- INPUTS
+		let monto = $('#con_precio_total').val();//input -- precio total
+		let tipo_venta = $('#con_tipo_venta').val();//input -- modalidad venta
+		let interes_anual = $('#con_interes').val();//input -- 
+		let n = $('#con_plazo').val();//plazo input
+		let cuota_inicial = $('#con_pago_inicial').val();//input
+		let tasa_cambio = $('#con_tasa_cambio').val();//input
+		// fin -- INPUTS
+
+		//MODAL TEXTS
+		$('#txt_monto').html($('#con_precio_total').val());
+		$('#txt_moneda').html($('#con_moneda :selected').text());
+		$('#txt_modalidad').html($('#con_tipo_venta :selected').text());
+		$('#txt_meses').html($('#con_plazo').val());
+		$('#txt_cuota_inicial').html($('#con_pago_inicial').val());
+		$('#txt_interes').html($('#con_interes').val());
+
+		let saldo = monto;
+
+		// al contado
+		if(tipo_venta == 0){
+			saldo = monto - cuota_inicial;
+			const nuevoMes = fecha.getMonth() + iterador_meses;
+			fecha.setMonth(nuevoMes);
+			var dia = fecha.getDate(); // Día del mes
+			var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
+			var anio = fecha.getFullYear(); // Año
+			var fecha_actual = dia+"-"+mes+"-"+anio;
+
+			$('#tabla-plan-pagos').append('<tr><td>1</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>PAGO AL CONTADO</td></tr>');
+			x = {'nro':1, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'PAGO AL CONTADO'};
+			data_plan.push(x);
+			// console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
+			console.log(data_plan);
+			$('#campo_plan_pagos').val(JSON.stringify(data_plan));
+		}
+		// a pagos
+		if(tipo_venta == 1){
+			const nuevoMes = fecha.getMonth() + iterador_meses;
+			fecha.setMonth(nuevoMes);
+			var dia = fecha.getDate(); // Día del mes
+			var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
+			var anio = fecha.getFullYear(); // Año
+			var fecha_actual = dia+"-"+mes+"-"+anio;
+			saldo = monto - cuota_inicial;
+			iterador_meses++;
+
+			$('#tabla-plan-pagos').append('<tr><td>0</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>CUOTA INICIAL</td></tr>');
+			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
+			data_plan.push(x);
+
+			console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
+			monto = saldo;
+
+			//monto de pago mensual
+			M = monto/n;
+			let i = 1;
+			while(i <= n){
+				//monto de pago redondeado
+				monto_pago = (Math.round(M*100)/100);			
+				//saldo redondeado
+				saldo = Math.round((saldo - monto_pago)*100)/100;
+				if(saldo > -1 && saldo < 1){
+					saldo = 0;
+				}
+				const nuevoMes = fecha.getMonth() + iterador_meses;
+				fecha.setMonth(nuevoMes);
+
+				var dia = fecha.getDate(); // Día del mes
+				var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
+				var anio = fecha.getFullYear(); // Año
+				var fecha_actual = dia+"-"+mes+"-"+anio;
+
+				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td>'+fecha_actual+'</td><td>'+monto_pago+'</td><td>'+(monto_pago*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td></td></tr>');
+				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':''};
+				data_plan.push(x);
+
+				console.log("Mes: "+i+" Monto: "+monto_pago+" SALDO: "+saldo);
+
+				i++;
+			}
+			console.log(data_plan);
+			$('#campo_plan_pagos').val(JSON.stringify(data_plan));
+
+		}
+		// a credito
+		if(tipo_venta == 2 && interes_anual > 0){
+			const nuevoMes = fecha.getMonth() + iterador_meses;
+			fecha.setMonth(nuevoMes);
+			var dia = fecha.getDate(); // Día del mes
+			var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
+			var anio = fecha.getFullYear(); // Año
+			var fecha_actual = dia+"-"+mes+"-"+anio;
+			saldo = monto - cuota_inicial;
+			iterador_meses++;
+
+			$('#tabla-plan-pagos').append('<tr><td>0</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>CUOTA INICIAL</td></tr>');
+			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
+			data_plan.push(x);
+			console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
+			monto = saldo;
+
+			let r = interes_anual/12;//interes mensual
+			let i = 1;
+			while(i <= n){
+				//monto de pago mensual
+				M = (monto * r * (1 + r)**n) / ((1 + r)**n - 1)
+				//interes mensual
+				IM = Math.round(saldo*r*100)/100;
+				//amortizacion
+				AM = Math.round((M-IM)*100)/100;
+				//monto de pago redondeado
+				monto_pago = (Math.round(M*100)/100);			
+				//saldo redondeado
+				saldo = Math.round((saldo - AM)*100)/100;
+				if(saldo > -1 && saldo < 1){
+					saldo = 0;
+				}
+				const nuevoMes = fecha.getMonth() + iterador_meses;
+				fecha.setMonth(nuevoMes);
+
+				var dia = fecha.getDate(); // Día del mes
+				var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
+				var anio = fecha.getFullYear(); // Año
+				var fecha_actual = dia+"-"+mes+"-"+anio;
+
+				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td>'+fecha_actual+'</td><td>'+monto_pago+'</td><td>'+(monto_pago*tasa_cambio)+'</td><td>'+IM+'</td><td>'+AM+'</td><td>'+saldo+'</td><td></td></tr>');
+				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago, 'interes_mensual':IM, 'amortizacion':AM, 'saldo':saldo, 'observacion':''};
+				data_plan.push(x);
+				console.log("Mes: "+i+" Monto: "+monto_pago+" I: "+IM+" A: "+AM+" SALDO: "+saldo);
+				i++;
+			}
+
+			console.log(data_plan);
+			$('#campo_plan_pagos').val(JSON.stringify(data_plan));
+
+		}
+		if(tipo_venta == 2 && interes_anual <= 0){
+			$('#tabla-plan-pagos').append('<tr><td colspan="7"><div class="alert alert-warning">Para un plan a credito, el interes anual debe ser mayor a 0. Revise los datos de entrada e intente nuevamente.</div></td></tr>');
+		}
+
+
+	});
+
 	/*
 	* Verificación de duplicados de persona en bd
 	* Evento: focusout
@@ -700,7 +1151,6 @@ $(function(){
 		reader.readAsDataURL(this.files[0]);
 	});	
 
-
 });	
 
 	/*
@@ -772,9 +1222,10 @@ $(function(){
 			success: function(data){
 				$('#lot_id').html('');
 				$('#lot_id').append('<option value="">Seleccione una opción</option>');
+				console.log(data.lotes);
 				//rellenando el select
 				$(data.lotes).each(function(){
-					let select_item = '<option data-modalidad="'+this.mov_tipo_venta+'" value="'+this.lot_id+'">'+this.lot_nro+'</option>';
+					let select_item = '<option data-modalidad="'+this.mov_tipo_venta+'" data-moneda="'+this.mov_moneda_venta+'" data-pago-inicial="'+this.mov_cuota_inicial+'" data-plazo="'+this.mov_plazo+'" data-precio="'+this.mov_precio_oferta+'" data-interes="'+this.mov_tasa_interes+'" value="'+this.lot_id+'">'+this.lot_nro+'</option>';
 					$('#lot_id').append(select_item);
 				});
 			},
@@ -787,21 +1238,69 @@ $(function(){
 	$('body').on('change','#lot_id',function(e){
 		e.preventDefault();
 		$modalidad_selected = $(this).find(":selected").attr('data-modalidad');
+		$moneda_selected = $(this).find(":selected").attr('data-moneda');
+		$precio_selected = $(this).find(":selected").attr('data-precio');
+		$interes_selected = $(this).find(":selected").attr('data-interes');
+		$pago_inicial_selected = $(this).find(":selected").attr('data-pago-inicial');
+		$plazo_selected = $(this).find(":selected").attr('data-plazo');
 
-		$modalidad_selected == 0 ? $('#res_modalidad').val('AL CONTADO') : "";
-		$modalidad_selected == 1 ? $('#res_modalidad').val('A PAGOS') : "";
-		$modalidad_selected == 2 ? $('#res_modalidad').val('A CREDITO') : "";
+		$('#con_moneda').val($moneda_selected);
+		$('#con_precio_total').val($precio_selected);
+		$('#con_pago_inicial').val($pago_inicial_selected);
+		$('#con_plazo').val($plazo_selected);
+		$('#con_interes').val($interes_selected);
 
-		let res_concepto = $('#res_concepto_recibo').val();
-		let res_urb = $('#urb_id option:selected').text();
-		let res_man = $('#man_id option:selected').text();
-		let res_lot = $('#lot_id option:selected').text();
-		res_concepto = res_concepto+" "+res_lot+" de la urbanizacion "+res_urb+" manzano "+res_man;
-		$('#res_concepto_recibo').val(res_concepto);
+		$modalidad_selected == 0 ? $('#con_tipo_venta').val(0) : "";
+		$modalidad_selected == 1 ? $('#con_tipo_venta').val(1) : "";
+		$modalidad_selected == 2 ? $('#con_tipo_venta').val(2) : "";
+
+		// let res_concepto = $('#res_concepto_recibo').val();
+		// let res_urb = $('#urb_id option:selected').text();
+		// let res_man = $('#man_id option:selected').text();
+		// let res_lot = $('#lot_id option:selected').text();
+//		res_concepto = res_concepto+" "+res_lot+" de la urbanizacion "+res_urb+" manzano "+res_man;
+//		$('#res_concepto_recibo').val(res_concepto);
 	});
 
+	// $('#cli_id').change(function(e){
+	// 	console.log($(this).val());
+	// });
 
+	$('#ple_id').change(function(e){
+		if($(this).val().length > 0 && $('#cli_id').val().length > 0){
+			$('#btn-genera-plan-pagos').addClass('btn-primary');
+			$('#btn-genera-plan-pagos').attr('disabled', false);
+		}
+	});
 
+	$('#btn-guarda-plan-pagos').click(function(e){
+//		$('#btn-editar-borrador').addClass('btn-primary');
+//		$('#btn-editar-borrador').attr('disabled', false);
+		$('#btn-enviar').addClass('btn-primary');
+		$('#btn-enviar').attr('disabled', false);
+	});
+
+	// $('#btn-guardar-edicion').click(function(e){
+	// 	$('#btn-enviar').addClass('btn-primary');
+	// 	$('#btn-enviar').attr('disabled', false);
+	// });
+
+	$('#btn-editar-borrador').click(function(){
+		$('#doc-propietario').html();
+		$('#doc-superficie-terreno').html();
+		$('#doc-superficie-terreno-literal').html();
+		$('#doc-urbanizacion').html($('#urb_id option:selected').text());
+		$('#doc-numero-lote').html($('#lot_id option:selected').text());
+		$('#doc-manzano').html($('#man_id option:selected').text());
+
+		console.log($('#box-contract').html());
+		$('#editorhtml').val($('#box-contract').html());
+		$('#modal-descripcion-contrato').modal('show');
+		
+	});
+
+		
+	
 	</script>
 
 

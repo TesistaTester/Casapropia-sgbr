@@ -697,8 +697,8 @@ $(function(){
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (props) {
-        this._div.innerHTML = '<h5>INFORMACION DE LA PROPIEDAD</h5>' +  (props ?
-            '<h5>IDENTIFICADOR: <b>' + props.Id + '</b></h5>'
+        this._div.innerHTML = '<h4 class="text-primary">INFORMACION DE LA PROPIEDAD</h4>' +  (props ?
+            '<h5>ID POLIGONO: <b>' + props.Id + '</b></h5><div class="text-center"><button class="btn btn-sm btn-info">Relacionar con propiedad en BD</button></div>'
             : 'Apunta sobre una propiedad');
     };
 

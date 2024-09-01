@@ -8,16 +8,18 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('configuracion_programa_pago', function (Blueprint $table) {
             $table->bigIncrements('cof_id');
             $table->bigInteger('con_id');
-            $table->integer('cof_tipo_generar_cuotas');
-            $table->integer('cof_tipo_interes');
+            $table->double('cof_precio_total');
+            $table->integer('cof_tipo_venta');
+            $table->double('cof_interes');
+            $table->integer('cof_plazo');
+            $table->double('cof_pago_inicial');
+            $table->integer('cof_moneda');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('con_id')->references('con_id')->on('contrato');
@@ -26,10 +28,8 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('configuracion_programa_pago');
     }

@@ -140,7 +140,7 @@ class ManzanoController extends Controller
         $manzano = Manzano::where('man_id', $id)->first();
         $manzano->delete();
         $urb_id = $request->input('urb_id');
-        return redirect('urbanizaciones/'.$urb_id);
+        return redirect('urbanizaciones/'.Crypt::encryptString($urb_id));
     }
 
     //obtener los lotes de un manzano dado un id de manzano
@@ -157,5 +157,21 @@ class ManzanoController extends Controller
                  ->get();
         return response()->json(['status'=>'1', 'lotes'=>$lotes]);
     }
+
+    //obtener los lotes de un manzano dado un id de manzano
+    public function get_lotes_by_manzano_json_contratos(Request $request){
+        $id = $request->input('man_id');
+        $usu_rol = 1; //rol del usuario;
+        $lotes = DB::table('lote')
+                 ->join('propiedad', 'lote.pro_id', '=', 'propiedad.pro_id')
+                 ->join('modalidad_venta', 'propiedad.pro_id', '=', 'modalidad_venta.pro_id')
+                 ->where('lote.man_id', $id)
+                 ->where('modalidad_venta.mov_activo', true)
+                 ->whereNotIn('propiedad.pro_id', DB::table('contrato')->select('pro_id'))
+                //  ->where('')//agregar estado de propiedad de acuerdo a requerimientos
+                 ->get();
+        return response()->json(['status'=>'1', 'lotes'=>$lotes]);
+    }
+
 
 }

@@ -30,49 +30,43 @@
                         <table class="table table-bordered tabla-datos-clientes">
                             <thead>
                             <tr>
-                                <th>FOTOGRAFÍA</th>
-                                <th>TIPO PERSONA</th>
-                                <th>NRO DOCUMENTO</th>
-                                <th>NOMBRE COMPLETO</th>
-                                <th>ACTIVIDAD ECONÓMICA</th>
-                                <th>FECHA DE REGISTRO</th>
+                                <th>NRO CONTRATO</th>
+                                <th>PRECIO TOTAL</th>
+                                <th>MONEDA</th>
+                                <th>TIPO DE VENTA</th>
+                                <th>PAGO INICIAL</th>
+                                <th>PLAZO</th>
+                                <th>INTERES</th>
+                                <th>FECHA DE CONTRATO</th>
                                 <th>OPCION</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($clientes as $item)
+                            @foreach($contratos as $item)
                             <tr>
                                 <td>
-                                    <img style="width:200px !important;" class="img-thumbnail" src="{{asset('storage/'.$item->cli_foto)}}">
+                                    {{$item->con_nro_contrato}}
                                 </td>
                                 <td>
-                                    @if($item->persona->per_tipo_persona == 0)
-                                    NATURAL
-                                    @endif
-                                    @if($item->persona->per_tipo_persona == 1)
-                                    JURIDICA
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    @if($item->persona->per_tipo_documento == 0)
-                                    CI:
-                                    @endif
-                                    @if($item->persona->per_tipo_documento == 1)
-                                    LM:
-                                    @endif
-                                    @if($item->persona->per_tipo_documento == 2)
-                                    OTRO:
-                                    @endif
-                                    {{$item->persona->per_nro_id}}
-                                    @if($item->persona->per_tipo_documento == 0)
-                                    {{$item->persona->per_expedido}}
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    {{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}}
+                                    {{$item->con_precio_total}}
                                 </td>
                                 <td>
-                                    {{$item->actividad_economica->first()->ace_descripcion}}
+                                    {{$item->con_moneda}}
+                                </td>
+                                <td>
+                                    {{$item->con_tipo_venta}}
+                                </td>
+                                <td>
+                                    {{$item->con_pago_inicial}}
+                                </td>
+                                <td>
+                                    {{$item->con_plazo}}
+                                </td>
+                                <td>
+                                    {{$item->con_interes}}
+                                </td>
+                                <td>
+                                    {{$item->con_fecha_contrato}}
                                 </td>
                                 <td class="text-center">
                                     {{$item->updated_at}}
@@ -83,11 +77,17 @@
                                         OPCION
                                       </button>
                                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                         <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
-                                         @if($item->contratos()->count() > 0)
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-eye"></i> Ver plan de pagos</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-plus"></i> Nuevo plan de pagos</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato de compraventa</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato de cancelacion</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar minuta</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-upload"></i> Adjuntar documentos</a>
+                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato</a>
+                                         @if($item->adjuntos()->count() > 0)
                                          <a class="dropdown-item" title="El cliente tiene contratos registrados. No es posible eliminar este registro." href="#"><i class="fa fa-trash"></i> Eliminar</a>
                                          @else
-                                         <a class="dropdown-item btn-eliminar-cliente" data-cli-id="{{Crypt::encryptString($item->cli_id)}}" data-cli-nombre-completo="{{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}}" data-toggle="modal" data-target="#modal-eliminar-cliente" href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                         <a class="dropdown-item btn-eliminar-cliente" data-cli-id="{{Crypt::encryptString($item->con_id)}}" data-cli-nombre-completo="" data-toggle="modal" data-target="#modal-eliminar-cliente" href="#"><i class="fa fa-trash"></i> Eliminar</a>
                                          @endif
                                       </div>
                                     </div>

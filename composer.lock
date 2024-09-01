@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f6f58edea5654f99c2ce7deaf8f0da0",
+    "content-hash": "e704ee699b8e246cdbe2f3741df03c8d",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3692,32 +3692,30 @@
         },
         {
             "name": "spatie/laravel-google-cloud-storage",
-            "version": "2.2.3",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-google-cloud-storage.git",
-                "reference": "73057174c0094f425919c72229c5096f8d957c29"
+                "reference": "c25fc6a1b9f86e8d458830588d0c88c723badc8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-google-cloud-storage/zipball/73057174c0094f425919c72229c5096f8d957c29",
-                "reference": "73057174c0094f425919c72229c5096f8d957c29",
+                "url": "https://api.github.com/repos/spatie/laravel-google-cloud-storage/zipball/c25fc6a1b9f86e8d458830588d0c88c723badc8f",
+                "reference": "c25fc6a1b9f86e8d458830588d0c88c723badc8f",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "^9.0|^10.0",
-                "illuminate/filesystem": "^9.0|^10.0",
-                "illuminate/support": "^9.0|^10.0",
+                "illuminate/contracts": "^9.0|^10.0|^11.0",
+                "illuminate/filesystem": "^9.0|^10.0|^11.0",
+                "illuminate/support": "^9.0|^10.0|^11.0",
                 "league/flysystem-google-cloud-storage": "^3.0.15",
                 "php": "^8.0"
             },
             "require-dev": {
-                "brianium/paratest": "^6.4",
-                "nunomaduro/collision": "^6.1|^7.0",
-                "orchestra/testbench": "^7.0|^8.0",
+                "nunomaduro/collision": "^6.1|^7.0|^8.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
                 "phpunit/phpunit": "^9.6|^10.0",
-                "spatie/laravel-ray": "^1.29",
-                "vimeo/psalm": "^4.18|^5.9"
+                "spatie/laravel-ray": "^1.29"
             },
             "type": "library",
             "extra": {
@@ -3755,7 +3753,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-google-cloud-storage/issues",
-                "source": "https://github.com/spatie/laravel-google-cloud-storage/tree/2.2.3"
+                "source": "https://github.com/spatie/laravel-google-cloud-storage/tree/2.3.0"
             },
             "funding": [
                 {
@@ -3763,7 +3761,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-28T14:22:57+00:00"
+            "time": "2024-03-14T22:16:34+00:00"
         },
         {
             "name": "stichoza/google-translate-php",

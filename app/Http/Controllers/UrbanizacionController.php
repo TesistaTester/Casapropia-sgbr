@@ -59,6 +59,15 @@ class UrbanizacionController extends Controller
         $urbanizacion->urb_fecha_aprobacion = $request->input('urb_fecha_aprobacion'); 
         $urbanizacion->urb_ley = $request->input('urb_ley'); 
         $urbanizacion->save();
+        $manzanos = array_filter(explode(',',$request->input('manzanos')));
+        if(count($manzanos) > 0){
+            foreach($manzanos as $item){
+                $manzano = new Manzano();
+                $manzano->urb_id = $urbanizacion->urb_id;
+                $manzano->man_nombre = $item; 
+                $manzano->save();    
+            }
+        }
 
         return redirect('/urbanizaciones');
     }
@@ -144,6 +153,7 @@ class UrbanizacionController extends Controller
      */
     public function destroy($id)
     {
+        $id = Crypt::decryptString($id);
         $urbanizacion = Urbanizacion::where('urb_id', $id)->first();
         $urbanizacion->delete();
         return redirect('urbanizaciones');
