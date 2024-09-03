@@ -49,6 +49,11 @@ class Propiedad extends Model
         return $this->hasMany(AdjuntoPropiedad::class, 'pro_id');
     }
 
+    //reservas
+    public function reservas(){
+        return $this->hasMany(Reserva::class, 'pro_id');
+    }
+
 
     //Propietarios legales asignados
     // public function propietarios_legales(){

@@ -98,6 +98,7 @@ class UrbanizacionController extends Controller
      */
     public function edit($id)
     {
+        $id = Crypt::decryptString($id);
         $urbanizacion = Urbanizacion::where('urb_id', $id)->first();
         return view('propiedades.form_editar_urbanizacion', [
             'modulo_activo' => $this->modulo,

@@ -11,7 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('recibo_pago', function (Blueprint $table) {
+            $table->bigIncrements('rep_id');
+            $table->bigInteger('ppa_id');
+            $table->integer('rep_nro');
+            $table->integer('rep_saldo_anterior');
+            $table->integer('rep_pago_programado');
+            $table->integer('rep_fecha_pago');
+            $table->integer('rep_monto_pago');
+            $table->integer('rep_tasa_cambio');
+            $table->integer('rep_saldo');
+            $table->integer('rep_efectivo');
+            $table->integer('rep_respaldo');
+            $table->integer('rep_observacion');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('ppa_id')->references('ppa_id')->on('programa_pago');
+        });
     }
 
     /**
@@ -19,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('recibo_pago');
     }
 };

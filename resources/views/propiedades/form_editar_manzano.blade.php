@@ -3,7 +3,7 @@
 
 @section('contenido')
 
-<div class="col-md-9 content-pane">
+<div class="col-md-10 content-pane">
 	<h3 class="title-header" style="text-transform: uppercase;">
 		<i class="fa fa-edit"></i>
 		{{$titulo}}

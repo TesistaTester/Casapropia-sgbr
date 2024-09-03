@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-                    <h3 class="subtitle-header"><i class="fa fa-database"></i> DATOS GENERALES
+                    <h3 class="subtitle-header"><i class="fa fa-database"></i> DATOS GENERALESITO
                         <a href="#" title="Eliminar urbanización" data-toggle="modal" data-target="#modal-eliminar-urbanizacion" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
                         <a href="{{url('urbanizaciones/'.$urbanizacion->urb_id.'/editar')}}" title="Editar datos de urbanización" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a>
                     </h3>

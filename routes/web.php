@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdjuntoPropiedad;
 use App\Http\Controllers\AdjuntoPropiedadController;
+use App\Http\Controllers\AdjuntoUrbanizacion;
+use App\Http\Controllers\AdjuntoUrbanizacionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UrbanizacionController;
@@ -71,6 +73,10 @@ Route::get('/inicio', [DashboardController::class ,'index']);
 * RUTAS: Urbanizaciones
 ----------------------------------------
 */
+Route::delete('/urbanizaciones/eliminar_adjunto/{id}', [AdjuntoUrbanizacionController::class ,'destroy']);
+Route::get('/urbanizaciones/edit_adjunto/{id}', [AdjuntoUrbanizacionController::class ,'store_adjunto_urbanizacion']);
+Route::post('/urbanizaciones/store_adjunto', [AdjuntoUrbanizacionController::class ,'store_adjunto_urbanizacion']);
+Route::get('/urbanizaciones/{id}/nuevo_adjunto', [AdjuntoUrbanizacionController::class ,'nuevo_adjunto_urbanizacion']);
 Route::post('/urbanizaciones/get_man_by_urb_json', [UrbanizacionController::class, 'get_manzanos_by_urbanizacion_json']);
 Route::post('/urbanizaciones/{id}/store_plano_inicial', [UrbanizacionController::class, 'store_plano_inicial']);
 Route::resource('/urbanizaciones', UrbanizacionController::class);

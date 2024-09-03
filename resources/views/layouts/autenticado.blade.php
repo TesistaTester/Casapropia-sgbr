@@ -509,27 +509,27 @@
             //     });
             }
 
-            //VALIDACION CAMPO NRO LOTE (FORMULARIO REGISTRO DE LOTE)
-            $('#lot_nro').focusout(function(){
-                let respuesta = validar_campo("lotes/valida_lot_nro", "lot_nro", $(this).val(), "lote", $(this).attr('data-urbid'));
-                let msg_ok = "El nro de lote"+$(this).val()+" es único";
-                let msg_error = "El nro de lote "+$(this).val()+" ya existe. Intente nuevamente";
-                mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
-            });
-            //VALIDACION CAMPO CODIGO LOTE (FORMULARIO REGISTRO DE LOTE)
-            $('#lot_codigo').focusout(function(){
-                let respuesta = validar_campo("lotes/valida_lot_codigo", "lot_codigo", $(this).val(), "lote", $(this).attr('data-urbid'));
-                let msg_ok = "El código de lote"+$(this).val()+" es único";
-                let msg_error = "El código de lote "+$(this).val()+" ya existe. Intente nuevamente";
-                mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
-            });
-            //VALIDACION CAMPO NRO LOTE (FORMULARIO REGISTRO DE LOTE)
-            $('#lot_matricula').focusout(function(){
-                let respuesta = validar_campo("lotes/valida_lot_matricula", "lot_matricula", $(this).val(), "lote", $(this).attr('data-urbid'));
-                let msg_ok = "La matricula de lote"+$(this).val()+" es único";
-                let msg_error = "La matricula de lote "+$(this).val()+" ya existe. Intente nuevamente";
-                mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
-            });
+            // //VALIDACION CAMPO NRO LOTE (FORMULARIO REGISTRO DE LOTE)
+            // $('#lot_nro').focusout(function(){
+            //     let respuesta = validar_campo("lotes/valida_lot_nro", "lot_nro", $(this).val(), "lote", $(this).attr('data-urbid'));
+            //     let msg_ok = "El nro de lote"+$(this).val()+" es único";
+            //     let msg_error = "El nro de lote "+$(this).val()+" ya existe. Intente nuevamente";
+            //     mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
+            // });
+            // //VALIDACION CAMPO CODIGO LOTE (FORMULARIO REGISTRO DE LOTE)
+            // $('#lot_codigo').focusout(function(){
+            //     let respuesta = validar_campo("lotes/valida_lot_codigo", "lot_codigo", $(this).val(), "lote", $(this).attr('data-urbid'));
+            //     let msg_ok = "El código de lote"+$(this).val()+" es único";
+            //     let msg_error = "El código de lote "+$(this).val()+" ya existe. Intente nuevamente";
+            //     mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
+            // });
+            // //VALIDACION CAMPO NRO LOTE (FORMULARIO REGISTRO DE LOTE)
+            // $('#lot_matricula').focusout(function(){
+            //     let respuesta = validar_campo("lotes/valida_lot_matricula", "lot_matricula", $(this).val(), "lote", $(this).attr('data-urbid'));
+            //     let msg_ok = "La matricula de lote"+$(this).val()+" es único";
+            //     let msg_error = "La matricula de lote "+$(this).val()+" ya existe. Intente nuevamente";
+            //     mostrar_resultados_validacion($(this), respuesta, msg_ok, msg_error);
+            // });
 
 
 

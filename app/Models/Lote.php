@@ -24,6 +24,10 @@ class Lote extends Model
         return $this->belongsTo(Manzano::class, 'man_id');
     }
 
+    public function ubicaciones(){
+        return $this->hasMany(Ubicacion_referencial::class, 'lot_id');
+    }
+
     //Atravesando una relacion
     // public function lotes(){
     //     return $this->hasManyThrough(Lote::class, Manzano::class, 'urb_id', 'man_id', 'urb_id', 'man_id');

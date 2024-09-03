@@ -3,9 +3,9 @@
 
 @section('contenido')
 
-<div class="col-md-9 content-pane">
+<div class="col-md-10 content-pane">
 		<h3 class="title-header" style="text-transform: uppercase;">
-			<i class="fa fa-plus"></i>
+			<i class="fa fa-edit"></i>
 			{{$titulo}}
 			<a href="{{url('urbanizaciones')}}" title="Volver a lista de urbanizaciones" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
 		</h3>

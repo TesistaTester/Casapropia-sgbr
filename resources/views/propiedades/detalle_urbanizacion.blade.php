@@ -13,20 +13,21 @@
     <div class="row">
         <div class="col-12" style="padding-right:0; border-right:2px solid #0d4a9a;">
             <div class="nav nav-pills" id="v-pills-tab">
-                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-database"></i> Datos generales</a>
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-database"></i> Datos generales</a>
                 <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-apple"></i> Manzanos</a>
                 <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-building"></i> Lotes</a>
-                <a class="nav-link active" id="v-pills-messages-tab" data-toggle="pill" href="#v-mapas" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-map"></i> Planos</a>
+                <a class="nav-link" id="v-pills-documents-tab" data-toggle="pill" href="#v-documents" role="tab" aria-controls="v-pills-documents" aria-selected="false"><i class="fa fa-folder-open"></i> Documentos adjuntos</a>
+                {{-- <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-mapas" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-map"></i> Planos geolocalizados</a> --}}
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                     <h3 class="subtitle-header"><i class="fa fa-database"></i> DATOS GENERALES
-                        <a href="#" title="Eliminar urbanización" data-toggle="modal" data-target="#modal-eliminar-urbanizacion" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
-                        <a href="{{url('urbanizaciones/'.$urbanizacion->urb_id.'/editar')}}" title="Editar datos de urbanización" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a>
+                        {{-- <a href="#" title="Eliminar urbanización" data-toggle="modal" data-target="#modal-eliminar-urbanizacion" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
+                        <a href="{{url('urbanizaciones/'.$urbanizacion->urb_id.'/editar')}}" title="Editar datos de urbanización" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a> --}}
                     </h3>
                     <div class="row">
                         <div class="col-md-12">
@@ -180,6 +181,68 @@
                     </div>
                     <!-- fin card  -->
                 </div>
+                <div class="tab-pane fade" id="v-documents" role="tabpanel" aria-labelledby="v-documents">
+                    <h3 class="subtitle-header"><i class="fa fa-folder-open"></i>
+                        DOCUMENTOS ADJUNTOS - URBANIZACION
+                        <a href="{{url('urbanizaciones/'.Crypt::encryptString($urbanizacion->urb_id).'/nuevo_adjunto')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO DOCUMENTO ADJUNTO</a>
+                    </h3>
+                    <!-- inicio card  -->
+                    <div class="card card-stat">
+                        <div class="card-body">
+                            @if($urbanizacion->adjuntos->count() == 0)
+                            <div class="alert alert-info">
+                                <div class="media">
+                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
+                                    <div class="media-body">
+                                        <h5 class="mt-0">Nota.-</h5>
+                                        <p>
+                                            La urbanización NO tiene documentos adjuntos registrados todavía. 
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            @else
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="text-center">DESCRIPCION DEL DOCUMENTO</th>
+                                    <th class="text-center">ENLACE</th>
+                                    <th class="text-center">FECHA Y HORA DE CARGA</th>
+                                    <th class="text-center">OPCION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($urbanizacion->adjuntos as $item)
+                                <tr>
+                                    <td class="text-center">{{$item->adu_descripcion}}</td>
+                                    <td class="text-center">
+                                        <a target="_blank" href="{{asset('storage/'.$item->adu_ruta)}}" class="btn btn-sm btn-link">
+                                            <i class="fa fa-file"></i> Ver documento
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        {{$item->updated_at}}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            OPCION
+                                          </button>
+                                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item btn-eliminar-adjunto" data-apo-id="{{Crypt::encryptString($item->adu_id)}}" data-apo-descripcion="{{$item->adu_descripcion}}" data-toggle="modal" data-target="#modal-eliminar-adjunto" href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                          </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- fin card  -->
+                </div>
+
                 <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
                     <h3 class="subtitle-header"><i class="fa fa-building"></i>
                         LOTES
@@ -201,7 +264,7 @@
                                 </div>
                             </div>
                             @else
-                            <table class="table table-bordered tabla-datos">
+                            <table class="table table-bordered tabla-datos-lotes">
                                 <thead>
                                     <tr>
                                         <th>NRO LOTE</th>
@@ -216,23 +279,32 @@
                                     <tr>
                                         <td>{{$item->lot_nro}}</td>
                                         <td>{{$item->lot_codigo}}</td>
-                                        <td>{{$item->propiedad->estados->first()->edi_estado}}</td>
+                                        <td>{{$item->propiedad->estados->first()->estado->edi_estado}}</td>
                                         <td>{{$item->updated_at}}</td>
                                         <td>
-                                            <a href="{{url('lotes/'.Crypt::encryptString($item->lot_id))}}" class="btn btn-secondary" type="button" id="lnk_gestionar_componente">
+                                            {{-- <a href="{{url('lotes/'.Crypt::encryptString($item->lot_id))}}" class="btn btn-secondary" type="button" id="lnk_gestionar_componente">
                                                 <i class="fa fa-cog"></i>
                                                 Administrar lote
-                                            </a>
-                                            {{-- <div class="dropdown">
+                                            </a> --}}
+                                            <div class="dropdown">
                                                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                   OPCION
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                      <a class="dropdown-item" href="#"><i class="fa fa-cog"></i> Gestionar lote</a>
-                                                      <a class="dropdown-item" href="#"><i class="fa fa-edit"></i> Opcion2</a>
-                                                  <a class="dropdown-item" href="#"><i class="fa fa-trash"></i> Opcion3</a>
+                                                      <a class="dropdown-item" href="{{url('lotes/'.Crypt::encryptString($item->lot_id))}}"><i class="fa fa-cog"></i> Administrar lote</a>
+                                                      <div class="dropdown-divider"></div>
+                                                      <a class="dropdown-item" href="{{url('lotes/'.Crypt::encryptString($item->lot_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
+                                                      {{-- ESTADOS: {{count($item->propiedad->estados)}}
+                                                      ADJUNTOS: {{count($item->propiedad->adjuntos)}}
+                                                      RESERVAS: {{count($item->propiedad->reservas)}}
+                                                      CONTRATOSs: {{count($item->propiedad->contratos)}} --}}
+                                                      @if(count($item->propiedad->estados) == 1 && count($item->propiedad->adjuntos) == 0 && count($item->propiedad->reservas) == 0 && count($item->propiedad->contratos) == 0)
+                                                      <a class="dropdown-item btn-eliminar-lote" data-lot-id="{{Crypt::encryptString($item->lot_id)}}" data-lot-descripcion="{{$item->lot_codigo}}" data-toggle="modal" data-target="#modal-eliminar-lote" href="#" href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                                      @else 
+                                                      <a class="dropdown-item" href="#" title="No es posible eliminar este lote. Es posible que tenga documentos adjuntos, reservas o contratos asociados."><i class="fa fa-trash"></i> Eliminar</a>
+                                                      @endif
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                           </td>
                                     </tr>
                                     @endforeach
@@ -243,9 +315,9 @@
                     </div>
                     <!-- fin card  -->
                 </div>
-                <div class="tab-pane fade show active" id="v-mapas" role="tabpanel" aria-labelledby="v-mapas">
+                <div class="tab-pane fade" id="v-mapas" role="tabpanel" aria-labelledby="v-mapas">
                     <h3 class="subtitle-header"><i class="fa fa-map"></i>
-                        MAPAS
+                        PLANOS GEOLOCALIZADOS
                     </h3>
                     <div class="card card-stat">
                         <div class="card-body">
@@ -263,7 +335,7 @@
                             </div>
                             <button data-toggle="modal" data-target="#modal-cargar-geojson" class="btn btn-primary"><i class="fa fa-map"></i> Cargar planos georeferenciados</button>
                             @else
-                            <h4>PLANO DE LOTES GEOLOCALIZADOS</h4>
+                            {{-- <h4>PLANO DE LOTES GEOLOCALIZADOS</h4> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                     <div id="mapa-inicial" style="height: 480px;"></div>
@@ -401,6 +473,98 @@
   </div>
   {{-- FIN MODAL: ELIMINAR MANZANO --}}
 
+{{-- INICIO MODAL: ELIMINAR ADJUNTO --}}
+<div class="modal fade" id="modal-eliminar-adjunto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-trash"></i>
+              Eliminar documento adjunto
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="box-data-xtra">
+                <h5>
+                    <span class="text-success">DOCUMENTO: </span>
+                    <span id="txt-descripcion"></span><br>
+                </h5>
+            </div>
+            <div class="alert alert-danger">
+                <div class="media">
+                    <img src="{{asset('img/alert-danger.png')}}" class="align-self-center mr-3" alt="...">
+                    <div class="media-body">
+                        <h5 class="mt-0">Cuidado.-</h5>
+                        <p>
+                            ¿Está seguro que desea eliminar éste registro?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
+          <form id="form-eliminar-adjunto" action="{{url('urbanizaciones/eliminar_adjunto')}}" method="post">
+            @method('delete')
+            @csrf
+            {{-- <input type="hidden" name="lot_id" value="{{Crypt::encryptString($lote->lot_id)}}"> --}}
+            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Si, eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: ELIMINAR ADJUNTO --}}
+
+{{-- INICIO MODAL: ELIMINAR LOTE --}}
+<div class="modal fade" id="modal-eliminar-lote" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#eee;">
+          <h5 class="modal-title text-primary">
+              <i class="fa fa-trash"></i>
+              Eliminar lote
+            </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="box-data-xtra">
+                <h5>
+                    <span class="text-success">DOCUMENTO: </span>
+                    <span id="txt-descripcion-lote"></span><br>
+                </h5>
+            </div>
+            <div class="alert alert-danger">
+                <div class="media">
+                    <img src="{{asset('img/alert-danger.png')}}" class="align-self-center mr-3" alt="...">
+                    <div class="media-body">
+                        <h5 class="mt-0">Cuidado.-</h5>
+                        <p>
+                            ¿Está seguro que desea eliminar éste registro?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
+          <form id="form-eliminar-lote" action="{{url('lotes')}}" method="post">
+            @method('delete')
+            @csrf
+            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Si, eliminar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{-- FIN MODAL: ELIMINAR ADJUNTO --}}
 
 
   {{-- INICIO MODAL: CARGAR ARCHIVO GEOJSON --}}
@@ -487,6 +651,46 @@
 
 <script type="text/javascript" async="defer">
 $(function(){
+    /*
+    -------------------------------------------------------------
+    * CONFIGURACION DATA TABLES
+    -------------------------------------------------------------
+    */
+    $('.tabla-datos-lotes').DataTable({"language":{url: '{{asset('js/datatables-lang-es.json')}}'}, "order": [[ 0, "desc" ]]});
+
+    /*
+    --------------------------------------------------------------
+    ELIMINAR LOTE
+    --------------------------------------------------------------
+    */
+    $('.btn-eliminar-lote').click(function(){
+       let apo_id = $(this).attr('data-lot-id');
+       let apo_descripcion = $(this).attr('data-lot-descripcion');
+       $('#txt-descripcion-lote').html(apo_descripcion);
+       //form data
+       action = $('#form-eliminar-lote').attr('action');
+       action = action+'/'+apo_id;
+       $('#form-eliminar-lote').attr('action', action);
+   });
+
+    
+    /*
+    --------------------------------------------------------------
+    ELIMINAR ADJUNTO
+    --------------------------------------------------------------
+    */
+    $('.btn-eliminar-adjunto').click(function(){
+       let apo_id = $(this).attr('data-apo-id');
+       let apo_descripcion = $(this).attr('data-apo-descripcion');
+       $('#txt-descripcion').html(apo_descripcion);
+       //form data
+       action = $('#form-eliminar-adjunto').attr('action');
+       action = action+'/'+apo_id;
+       $('#form-eliminar-adjunto').attr('action',action);
+   });
+    
+
+
     @if($urbanizacion->urb_plano_geojson == null)
     /*
     ---------------------------------------------------------------------------------------

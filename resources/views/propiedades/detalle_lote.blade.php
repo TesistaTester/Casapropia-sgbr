@@ -14,10 +14,10 @@
         <div class="col-md-12" style="padding-right:0; border-right:2px solid #0d4a9a;">
             <div class="nav nav-pills" id="v-pills-tab">
                 <a class="nav-link active" id="v-general-tab" data-toggle="pill" href="#v-general" role="tab" aria-controls="v-general" aria-selected="false"><i class="fa fa-database"></i> Datos generales</a>
-                <a class="nav-link" id="v-modalidad-tab" data-toggle="pill" href="#v-modalidad" role="tab" aria-controls="v-modalidad" aria-selected="false"><i class="fa fa-tags"></i> Modalidad venta </a>
-                <a class="nav-link" id="v-disponibilidad-tab" data-toggle="pill" href="#v-disponibilidad" role="tab" aria-controls="v-disponibilidad" aria-selected="false"><i class="fa fa-check"></i> Estados</a>
+                {{-- <a class="nav-link" id="v-modalidad-tab" data-toggle="pill" href="#v-modalidad" role="tab" aria-controls="v-modalidad" aria-selected="false"><i class="fa fa-tags"></i> Modalidad venta </a>
+                <a class="nav-link" id="v-disponibilidad-tab" data-toggle="pill" href="#v-disponibilidad" role="tab" aria-controls="v-disponibilidad" aria-selected="false"><i class="fa fa-check"></i> Estados</a> --}}
                 <a class="nav-link" id="v-propietarios-tab" data-toggle="pill" href="#v-propietarios" role="tab" aria-controls="v-propietarios" aria-selected="true"><i class="fa fa-users"></i> Propietarios</a>
-                <a class="nav-link" id="v-contratos-tab" data-toggle="pill" href="#v-contratos" role="tab" aria-controls="v-contratos" aria-selected="false"><i class="fa fa-file"></i> Contratos</a>
+                {{-- <a class="nav-link" id="v-contratos-tab" data-toggle="pill" href="#v-contratos" role="tab" aria-controls="v-contratos" aria-selected="false"><i class="fa fa-file"></i> Contratos</a> --}}
                 <a class="nav-link" id="v-adjuntos-tab" data-toggle="pill" href="#v-adjuntos" role="tab" aria-controls="v-adjuntos" aria-selected="false"><i class="fa fa-folder-open"></i> Documentos adjuntos</a>
             </div>
         </div>
@@ -436,15 +436,21 @@
                                                     <a class="dropdown-item" href="#" title="Este registro no está vigente y no es posible editarlo."><i class="fa fa-edit"></i> Editar</a>
                                                 @endif 
                                                 {{-- ELIMINAR --}}
-                                                @if($item->esp_activo == 1)
-                                                    @if($contratos->count() > 0)
-                                                    <a class="dropdown-item" title="La propiedad ya tiene contrato vigente. No es posible eliminar este registro." href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                                    @else
-                                                    <a class="dropdown-item btn-eliminar-estado" data-esp-id="{{Crypt::encryptString($item->esp_id)}}" data-esp-estado="{{$item->estado->edi_estado}}" data-toggle="modal" data-target="#modal-eliminar-estado" href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                                    @endif
-                                                @else    
-                                                    <a class="dropdown-item" href="#" title="Este registro no está vigente y no es posible eliminarlo."><i class="fa fa-trash"></i> Eliminar</a>
-                                                @endif 
+                                                @if($item->edi_id == 1)
+                                                <a class="dropdown-item" href="#" title="Este es el primer estado de la propiedad. No es posible eliminarlo"><i class="fa fa-trash"></i> Eliminar</a>
+                                                @else
+                                                    @if($item->esp_activo == 1)
+                                                        @if($contratos->count() > 0)
+                                                        <a class="dropdown-item" title="La propiedad ya tiene contrato vigente. No es posible eliminar este registro." href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                                        @else
+                                                        <a class="dropdown-item btn-eliminar-estado" data-esp-id="{{Crypt::encryptString($item->esp_id)}}" data-esp-estado="{{$item->estado->edi_estado}}" data-toggle="modal" data-target="#modal-eliminar-estado" href="#"><i class="fa fa-trash"></i> Eliminar</a>
+                                                        @endif
+                                                    @else    
+                                                        <a class="dropdown-item" href="#" title="Este registro no está vigente y no es posible eliminarlo."><i class="fa fa-trash"></i> Eliminar</a>
+                                                    @endif 
+                                                @endif
+                                            
+
                                              </div>
                                             </div>
                                         </td>
@@ -743,7 +749,7 @@
 
                 <div class="tab-pane fade" id="v-adjuntos" role="tabpanel" aria-labelledby="v-adjuntos">
                     <h3 class="subtitle-header"><i class="fa fa-folder-open"></i>
-                        DOCUMENTOS ADJUNTOS DEL LOTE
+                        DOCUMENTOS ADJUNTOS - LOTE
                         <a href="{{url('lotes/'.Crypt::encryptString($lote->lot_id).'/nuevo_adjunto')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVA DOCUMENTO ADJUNTO</a>
                     </h3>
                     <div class="alert alert-info alert-not-persistent">

@@ -4,7 +4,7 @@
 @section('contenido')
 <div class="col-md-10 content-pane">
     <h3 class="title-header" style="text-transform: uppercase;">
-        <i class="fa fa-plus"></i>
+        <i class="fa fa-edit"></i>
         {{$titulo}}
         <a title="Volver a lista de urbanizaciones" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;" href="{{url('urbanizaciones/'.Crypt::encryptString($urbanizacion->urb_id))}}"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
     </h3>
@@ -22,8 +22,9 @@
                             </span></strong></h4>
                             <hr>
                             <small>Los campos marcados con asterisco (<span class="text-danger">*</span>) son obligatorios.</small>
-                            <form action="{{url('lotes')}}" method="POST">
+                            <form action="{{url('lotes/'.Crypt::encryptString($lote->propiedad->pro_id))}}" method="POST">
                             @csrf
+                            @method('PUT')
                             <input type="hidden" name="urb_id" value="{{$urbanizacion->urb_id}}">
                             <input type="hidden" id="urb_nombre" value="{{$urbanizacion->urb_nombre}}">
 
@@ -38,7 +39,7 @@
                                             <select required name="man_id" id="man_id" class="form-control @error('man_id') is-invalid @enderror">
                                                 <option value="">Seleccione un manzano</option>
                                                 @foreach($urbanizacion->manzanos as $item)
-                                                @if(old('man_id') == $item->man_id)
+                                                @if(old('man_id', $lote->manzano->man_id) == $item->man_id)
                                                 <option value="{{$item->man_id}}" selected>{{$item->man_nombre}}</option>
                                                 @else
                                                 <option value="{{$item->man_id}}">{{$item->man_nombre}}</option>
@@ -57,7 +58,7 @@
                                                 <span class="text-danger">*</span>
                                                 <i class="fa fa-question-circle float-right" title="Establecer un número de lote"></i>
                                             </label>
-                                        <input required data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_nro" name="lot_nro" value="{{old('lot_nro')}}" class="form-control @error('lot_nro') is-invalid @enderror" placeholder="Nro lote">
+                                        <input required data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_nro" name="lot_nro" value="{{old('lot_nro', $lote->lot_nro)}}" class="form-control @error('lot_nro') is-invalid @enderror" placeholder="Nro lote">
                                         @error('lot_nro')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -69,7 +70,7 @@
                                                 Código lote:
                                                 <i class="fa fa-question-circle float-right" title="Establecer un código de lote"></i>
                                             </label>
-                                        <input data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_codigo" name="lot_codigo" value="{{old('lot_codigo')}}" class="form-control @error('lot_codigo') is-invalid @enderror" placeholder="Cod. Lote">
+                                        <input data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_codigo" name="lot_codigo" value="{{old('lot_codigo', $lote->lot_codigo)}}" class="form-control @error('lot_codigo') is-invalid @enderror" placeholder="Cod. Lote">
                                         @error('lot_codigo')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -81,7 +82,7 @@
                                                 Matricula lote:
                                                 <i class="fa fa-question-circle float-right" title="Establecer una matricula de lote"></i>
                                             </label>
-                                        <input data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_matricula" name="lot_matricula" value="{{old('lot_matricula')}}" class="form-control @error('lot_matricula') is-invalid @enderror" placeholder="Matricula. Lote">
+                                        <input data-urbid="{{$urbanizacion->urb_id}}" type="text" id="lot_matricula" name="lot_matricula" value="{{old('lot_matricula', $lote->lot_matricula)}}" class="form-control @error('lot_matricula') is-invalid @enderror" placeholder="Matricula. Lote">
                                         @error('lot_matricula')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -96,7 +97,7 @@
                                             <span class="text-danger">*</span>
                                             <i class="fa fa-question-circle float-right" title="Establecer la superficie total del lote en metros cuadrados"></i>
                                         </label>
-                                        <input required pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('pro_superficie')}}" type="number" min="0" step=".01" name="pro_superficie" class="form-control @error('pro_superficie') is-invalid @enderror" placeholder="Sup Total Metros Cuadrados">
+                                        <input required pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('pro_superficie', $lote->propiedad->pro_superficie)}}" type="number" min="0" step=".01" name="pro_superficie" class="form-control @error('pro_superficie') is-invalid @enderror" placeholder="Sup Total Metros Cuadrados">
                                         @error('pro_superficie')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -108,7 +109,7 @@
                                             Superficie construida (m2):
                                             <i class="fa fa-question-circle float-right" title="Establecer la superficie construida del lote en metros cuadrados (si corresponde)"></i>
                                         </label>
-                                        <input type="number" pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('lot_superficie_construida')}}" min="0" step=".01" name="lot_superficie_construida" class="form-control @error('lot_superficie_construida') is-invalid @enderror" placeholder="Sup Const Metros Cuadrados">
+                                        <input type="number" pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('lot_superficie_construida', $lote->lot_superficie_construida)}}" min="0" step=".01" name="lot_superficie_construida" class="form-control @error('lot_superficie_construida') is-invalid @enderror" placeholder="Sup Const Metros Cuadrados">
                                         @error('lot_superficie_construida')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -121,7 +122,7 @@
                                             <span class="text-danger">*</span>
                                             <i class="fa fa-question-circle float-right" title="Establecer el ancho de vía del lote en metros"></i>
                                         </label>
-                                        <input required type="number" pattern="[0-9]+([\.][0-9]{0,2})? " value="{{old('lot_ancho_via')}}" min="0" step=".01" name="lot_ancho_via" class="form-control @error('lot_ancho_via') is-invalid @enderror" placeholder="Ancho Via Metros Lineal">
+                                        <input required type="number" pattern="[0-9]+([\.][0-9]{0,2})? " value="{{old('lot_ancho_via', $lote->lot_ancho_via)}}" min="0" step=".01" name="lot_ancho_via" class="form-control @error('lot_ancho_via') is-invalid @enderror" placeholder="Ancho Via Metros Lineal">
                                         @error('lot_ancho_via')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -133,7 +134,7 @@
                                             Muro perimetral (m):
                                             <i class="fa fa-question-circle float-right" title="Establecer la longitud del muro perimetral en metros (si corresponde)"></i>
                                         </label>
-                                        <input type="number" min="0" pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('pro_muro_perimetral')}}" step=".01" name="pro_muro_perimetral" class="form-control @error('pro_muro_perimetral') is-invalid @enderror" placeholder="Muro Metros Lineal">
+                                        <input type="number" min="0" pattern="[0-9]+([\.][0-9]{0,2})?" value="{{old('pro_muro_perimetral', $lote->propiedad->pro_muro_perimetral)}}" step=".01" name="pro_muro_perimetral" class="form-control @error('pro_muro_perimetral') is-invalid @enderror" placeholder="Muro Metros Lineal">
                                         @error('pro_muro_perimetral')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -151,6 +152,11 @@
                                         <select required name="ubi_id[]" multiple="multiple" class="form-control select-multi @error('ubi_id') is-invalid @enderror">
                                             {{-- <option value="">Seleccione ubicaciones</option> --}}
                                             @foreach($ubicaciones as $item)
+                                            {{-- @if(old('ubi_id', $lote->manzano->man_id) == $item->ubi_id)
+                                            <option value="{{$item->man_id}}" selected>{{$item->man_nombre}}</option>
+                                            @else
+                                            <option value="{{$item->man_id}}">{{$item->man_nombre}}</option>
+                                            @endif --}}
                                             <option value="{{$item->ubi_id}}">{{$item->ubi_descripcion}}</option>
                                             @endforeach
                                         </select>
@@ -165,7 +171,7 @@
                                             Descripción complementaria:
                                             <i class="fa fa-question-circle float-right" title="Agregar una descripción complementaria de la propiedad"></i>
                                         </label>
-                                        <textarea name="pro_descripcion" placeholder="Describir adicional de la propiedad" rows="1" class="form-control @error('pro_descripcion') is-invalid @enderror"></textarea>
+                                        <textarea name="pro_descripcion" placeholder="Describir adicional de la propiedad" rows="1" class="form-control @error('pro_descripcion') is-invalid @enderror">{{old('pro_descripcion', $lote->propiedad->pro_descripcion)}}</textarea>
                                         @error('pro_descripcion')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -177,7 +183,7 @@
                                             Base imponible:
                                             <i class="fa fa-question-circle float-right" title="Establecer la base imponible de la propiedad (si corresponde)"></i>
                                         </label>
-                                        <input type="text" value="{{old('pro_muro_perimetral')}}" name="pro_base_imponible" class="form-control @error('pro_base_imponible') is-invalid @enderror" placeholder="Base imponible">
+                                        <input type="text" value="{{old('pro_muro_perimetral', $lote->propiedad->pro_muro_perimetral)}}" name="pro_base_imponible" class="form-control @error('pro_base_imponible') is-invalid @enderror" placeholder="Base imponible">
                                         @error('pro_base_imponible')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -189,7 +195,7 @@
                                             Nro inmueble:
                                             <i class="fa fa-question-circle float-right" title="Establecer el numero de propiedad (si corresponde)"></i>
                                         </label>
-                                        <input type="text" value="{{old('pro_nro_inmueble')}}" name="pro_nro_inmueble" class="form-control @error('pro_nro_inmueble') is-invalid @enderror" placeholder="Nro del inmueble">
+                                        <input type="text" value="{{old('pro_nro_inmueble', $lote->propiedad->pro_nro_inmueble)}}" name="pro_nro_inmueble" class="form-control @error('pro_nro_inmueble') is-invalid @enderror" placeholder="Nro del inmueble">
                                         @error('pro_nro_inmueble')
                                         <div class="invalid-feedback">
                                             {{$message}}
@@ -201,6 +207,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
+                                    <input type="hidden" name="pro_id" id="pro_id" value="{{Crypt::encryptString($lote->propiedad->pro_id)}}">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fa fa-save"></i>
                                         Guardar datos

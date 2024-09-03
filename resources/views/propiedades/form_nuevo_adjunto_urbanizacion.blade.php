@@ -7,7 +7,7 @@
 		<h3 class="title-header" style="text-transform: uppercase;">
 			<i class="fa fa-plus"></i>
 			{{$titulo}}
-			<a href="{{url('lotes/'.Crypt::encryptString($lote->lot_id))}}" title="Volver a Administración del lote" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
+			<a href="{{url('urbanizaciones/'.Crypt::encryptString($urbanizacion->urb_id))}}" title="Volver a Administración del urbanizacion" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
 		</h3>
 
 		<div class="row">
@@ -17,27 +17,11 @@
 					<div class="row no-gutters">
 						<div class="col-md-12">
 							<div class="card-body">
-								<h4 class="card-title"><strong><span class="text-primary">
-									<i class="fa fa-database"></i>
-									Datos básicos
-								</span></strong></h4>
 								<hr>
 								<div class="row">
-									<div class="col-md-10 offset-md-1">
+									<div class="col-md-8 offset-md-2">
 										<div class="box-data-xtra">
 											<div class="row">
-												<div class="col-md-3">
-													<h5>
-														<span class="text-success">LOTE:</span>
-														<span>{{$lote->lot_nro}}</span>
-													</h5>
-												</div>
-												<div class="col-md-3">
-													<h5>
-														<span class="text-success">MANZANO:</span>
-														<span>{{$manzano->man_nombre}}</span>
-													</h5>
-												</div>
 												<div class="col-md-6">
 													<h5>
 														<span class="text-success">URBANIZACION:</span>
@@ -48,7 +32,7 @@
 										</div>
 									</div>
 								</div>
-								<form enctype="multipart/form-data" action="{{url('lotes/store_adjunto')}}" method="POST">
+								<form enctype="multipart/form-data" action="{{url('urbanizaciones/store_adjunto')}}" method="POST">
 									@csrf
 									<div class="row">
 										<div class="col-md-8 offset-md-2">
@@ -63,8 +47,8 @@
 													<span class="text-danger">*</span>
 													<i class="fa fa-question-circle float-right" title="Establecer una descripcion del documento"></i>
 												</label>
-												<input type="text" required name="apo_descripcion" id="apo_descripcion" class="form-control @error('apo_descripcion') is-invalid @enderror">
-												@error('apo_descripcion')
+												<input type="text" required name="adu_descripcion" id="adu_descripcion" class="form-control @error('adu_descripcion') is-invalid @enderror">
+												@error('adu_descripcion')
 												<div class="invalid-feedback">
 													{{$message}}
 												</div>											
@@ -77,8 +61,8 @@
 												<span class="text-danger">*</span>
 												<i class="fa fa-question-circle float-right" title="Establecer la fotografía del cliente"></i>
 											</label>
-											<input required type="file" name="apo_ruta" id="apo_ruta" class="form-control file @error('apo_ruta') is-invalid @enderror" accept="image/*,.pdf">
-											@error('apo_ruta')
+											<input required type="file" name="adu_ruta" id="adu_ruta" class="form-control file @error('adu_ruta') is-invalid @enderror" accept="image/*,.pdf">
+											@error('adu_ruta')
 											<div class="invalid-feedback">
 												{{$message}}
 											</div>											
@@ -87,7 +71,7 @@
 									</div>
 									<div class="row">
 										<div class="col-md-8 offset-md-2">
-											<input type="hidden" name="pro_id" id="pro_id" value="{{Crypt::encryptString($propiedad->pro_id)}}">
+											<input type="hidden" name="urb_id" id="urb_id" value="{{Crypt::encryptString($urbanizacion->urb_id)}}">
 											<button type="submit" class="btn btn-primary btn-enviar-adjunto">
 											<i class="fa fa-save"></i>
 											Guardar datos
@@ -114,7 +98,7 @@
 					$(this).attr('disabled',true);
 				}, 200);
 
-			});		
+			});
 		});
 		</script>
 		

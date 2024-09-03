@@ -24,6 +24,10 @@ class Urbanizacion extends Model
     public function lotes(){
         return $this->hasManyThrough(Lote::class, Manzano::class, 'urb_id', 'man_id', 'urb_id', 'man_id');
     }
+    //Adjuntos de la urbanizacion X
+    public function adjuntos(){
+        return $this->hasMany(AdjuntoUrbanizacion::class, 'urb_id');
+    }
     /*
     ------------------------------------------------------------------------
     METODOS ADICIONALES

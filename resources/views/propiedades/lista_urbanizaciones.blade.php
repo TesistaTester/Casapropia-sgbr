@@ -42,6 +42,7 @@
 					@if (count($item->lotes) == 0 && count($item->manzanos) == 0)
                 	<a href="#" title="Eliminar urbanizacion" data-toggle="modal" data-target="#modal-eliminar-urbanizacion" class="btn btn-sm btn-danger float-right btn-eliminar-urbanizacion" style="margin-left:10px;" data-urb-id="{{Crypt::encryptString($item->urb_id)}}" data-urb-nombre="{{$item->urb_nombre}}"><i class="fa fa-trash"></i> ELIMINAR</a>						
 					@endif	
+                    <a href="{{url('urbanizaciones/'.Crypt::encryptString($item->urb_id).'/editar')}}" title="Editar datos de urbanización" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a> 
 					</h4>
 							<hr>
 							<div class="row">

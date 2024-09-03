@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class LoteController extends Controller
 {
-    private $modulo = "propiedades";
+    private $modulo = "urbanizaciones";
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +38,7 @@ class LoteController extends Controller
     {
         $ubicaciones = Ubicacion::all();
         $urbanizacion = Urbanizacion::where('urb_id', $id)->first();
-        $titulo = 'NUEVO LOTE - '.$urbanizacion->urb_nombre;
+        $titulo = 'NUEVO LOTE - URB.'.$urbanizacion->urb_nombre;
         return view('propiedades.form_nuevo_lote', [
             'modulo_activo' => $this->modulo,
             'titulo'=>$titulo, 
@@ -188,7 +188,18 @@ class LoteController extends Controller
      */
     public function edit($id)
     {
-        //
+        $id = Crypt::decryptString($id);
+        $ubicaciones = Ubicacion::all();
+        $lote = Lote::where('lot_id', $id)->first();
+        $urbanizacion = $lote->manzano->urbanizacion;
+        $titulo = 'EDITAR LOTE - URB.'.$urbanizacion->urb_nombre;
+        return view('propiedades.form_editar_lote', [
+            'modulo_activo' => $this->modulo,
+            'titulo'=>$titulo, 
+            'lote'=>$lote, 
+            'urbanizacion'=>$urbanizacion, 
+            'ubicaciones'=>$ubicaciones
+        ]);
     }
 
     /**
@@ -200,7 +211,68 @@ class LoteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $validacion = $request->validate([
+            'man_id'=>'required|min:1|max:100',
+            'lot_nro'=>'required|min:0|integer',
+            'lot_codigo'=>'nullable|min:1|max:100',
+            'lot_matricula'=>'nullable|min:1|max:100',
+            'pro_superficie'=>'required|min:0|numeric',
+            'lot_superficie_construida'=>'nullable|min:0|numeric',
+            'lot_ancho_via'=>'required|min:0|numeric',
+            'pro_muro_perimetral'=>'nullable|min:0|numeric',
+            'ubi_id'=>'required',
+            'pro_descripcion'=>'nullable|min:1|max:100',
+            'pro_id'=>'required',
+        ]);
+        $id = Crypt::decryptString($id);
+
+        //guardar propiedad
+        $propiedad = Propiedad::where('pro_id', $id)->first();
+        $propiedad->pro_superficie = $request->input('pro_superficie');
+        $propiedad->pro_muro_perimetral = $request->input('pro_muro_perimetral');
+        $propiedad->pro_descripcion = $request->input('pro_descripcion');
+        $propiedad->pro_base_imponible = $request->input('pro_base_imponible');
+        $propiedad->pro_nro_inmueble = $request->input('pro_nro_inmueble');
+        $propiedad->save();
+        //guardar lote
+        $lote = Lote::where('lot_id', $propiedad->lote->lot_id)->first();
+        $lote->man_id = $request->input('man_id');
+        $lote->pro_id = $propiedad->pro_id;
+        $lote->lot_nro = $request->input('lot_nro');
+        $lote->lot_codigo = $request->input('lot_codigo');
+        $lote->lot_matricula = $request->input('lot_matricula');
+        $lote->lot_ancho_via = $request->input('lot_ancho_via');
+        $lote->lot_superficie_construida = $request->input('lot_superficie_construida');
+        $lote->save();
+
+        //limpiar las ubicaciones antiguas
+        $ubicaciones_antiguas = Ubicacion_referencial::where('lot_id', $lote->lot_id)->get();
+        foreach($ubicaciones_antiguas as $item){
+            $item->delete();
+        }
+        //guardar ubicaciones (seleccion multiple)
+        $ubi_id = $request->input('ubi_id');
+        foreach($ubi_id as $item){
+            $ubi_ref = new Ubicacion_referencial();
+            $ubi_ref->lot_id = $lote->lot_id;
+            $ubi_ref->ubi_id = $item;
+            $ubi_ref->save();
+        }
+        //guardar estado (predeterminado)
+        $estado_guardado = Estado_disponibilidad::where('edi_estado', 'GUARDADO')->first();
+        $estado_propiedad = new Estado_propiedad();
+        $estado_propiedad->edi_id = $estado_guardado->edi_id;
+        $estado_propiedad->pro_id = $propiedad->pro_id;
+        $estado_propiedad->esp_fecha = date('Y-m-d');
+        $estado_propiedad->esp_descripcion = "PRIMER ESTADO (REGISTRO SISTEMA)";
+        $estado_propiedad->esp_activo = 1;
+        $estado_propiedad->save();
+
+        $urb_id = $request->input('urb_id');
+
+        return redirect('urbanizaciones/'.Crypt::encryptString($urb_id));
+
     }
 
     /**
@@ -211,7 +283,21 @@ class LoteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $id = Crypt::decryptString($id);
+        $lote = Lote::where('lot_id', $id)->first();
+        $propiedad = Propiedad::where('pro_id', $lote->propiedad->pro_id)->first();
+        foreach($lote->ubicaciones as $item){
+            $item->delete();
+        }
+        foreach($propiedad->estados as $item){
+            $item->delete();
+        }
+        $urb_id = $lote->manzano->urbanizacion->urb_id;
+        $lote->delete();
+        $propiedad->delete();
+
+        return redirect('urbanizaciones/'.Crypt::encryptString($urb_id));
+
     }
 
 

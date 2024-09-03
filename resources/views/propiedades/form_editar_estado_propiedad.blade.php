@@ -67,13 +67,14 @@
 												<select required name="edi_id" id="edi_id" class="form-control @error('edi_id') is-invalid @enderror">
 													<option value="">Seleccione una opción</option>
 													@foreach ($estados as $item)
-														@if($item->edi_estado !== 'VENDIDO' && $item->edi_estado !== 'PAGANDO')
+														{{-- @if($item->edi_estado !== 'VENDIDO' && $item->edi_estado !== 'PAGANDO')
 															@if($item->edi_id == $estado_propiedad->edi_id)
 																<option value="{{$item->edi_id}}" selected>{{$item->edi_estado}}</option>
 															@else
 																<option value="{{$item->edi_id}}">{{$item->edi_estado}}</option>
 															@endif
-														@endif
+														@endif --}}
+														<option value="{{$item->edi_id}}">{{$item->edi_estado}}</option>
 													@endforeach
 												</select>
 												@error('edi_id')
