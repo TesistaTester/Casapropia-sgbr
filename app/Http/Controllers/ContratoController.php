@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdjuntoContrato;
 use App\Models\Cliente;
+use App\Models\ConfiguracionProgramaPago;
 use App\Models\Contrato;
 use App\Models\FirmaCliente;
 use App\Models\FirmaPropietarioLegal;
 use App\Models\Lote;
+use App\Models\ProgramaPago;
 use App\Models\Propiedad;
 use App\Models\Propietario_legal;
+use App\Models\ReciboPago;
 use App\Models\Urbanizacion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use TNkemdilim\MoneyToWords\Converter;
+use TNkemdilim\MoneyToWords\Languages as Language;
 
 class ContratoController extends Controller
 {
@@ -23,7 +30,7 @@ class ContratoController extends Controller
     public function index()
     {
         $contratos = Contrato::all();
-        return view('contratos.lista_contratos', ['titulo'=>'Contratos',
+        return view('contratos.lista_contratos', ['titulo'=>'Contratos de compraventa',
                                                           'contratos' => $contratos,
                                                           'modulo_activo' => $this->modulo
                                                          ]);
@@ -40,14 +47,14 @@ class ContratoController extends Controller
         $urbanizaciones = Urbanizacion::all();
         $clientes = Cliente::all();
         $propietarios = Propietario_legal::all();
-        $contratos = Contrato::where('con_fecha_contrato');        
+        // $contratos = Contrato::where('con_fecha_contrato');        
         return view('contratos.form_nuevo_contrato', ['titulo'=>'Registrar contrato',
-                                                          'urbanizaciones' => $urbanizaciones,
-                                                          'clientes' => $clientes,
-                                                          'propietarios' => $propietarios,
-                                                          'propiedades' => $propiedades,
-                                                          'modulo_activo' => $this->modulo
-                                                         ]);
+                                                      'urbanizaciones' => $urbanizaciones,
+                                                      'clientes' => $clientes,
+                                                      'propietarios' => $propietarios,
+                                                      'propiedades' => $propiedades,
+                                                      'modulo_activo' => $this->modulo
+                                                     ]);
     }
 
     /**
@@ -122,6 +129,39 @@ class ContratoController extends Controller
             $firma_propietario->save();
         }
 
+        //guardar configuracion de pagos
+        $config_pagos = new ConfiguracionProgramaPago();
+        $config_pagos->con_id = $contrato->con_id;
+        $config_pagos->cof_precio_total = $request->input('con_precio_total');
+        $config_pagos->cof_tipo_venta = $request->input('con_tipo_venta');
+        $config_pagos->cof_interes = $request->input('con_interes');
+        $config_pagos->cof_plazo = $request->input('con_plazo');
+        $config_pagos->cof_pago_inicial = $request->input('con_pago_inicial');
+        $config_pagos->cof_moneda = $request->input('con_moneda');
+        $config_pagos->cof_tasa_cambio = $request->input('con_tasa_cambio');
+        $config_pagos->save();        
+
+        //guardar plan de pagos
+        $plan_pagos = json_decode($request->input('campo_plan_pagos'));
+        $primer_pago = 0;
+        foreach($plan_pagos as $item){
+            $plan = new ProgramaPago();
+            $plan->cof_id = $config_pagos->cof_id;
+            $plan->ppa_nro = $item->nro;
+            $plan->ppa_fecha_programada = $item->fecha;            
+            $plan->ppa_cuota_programada = $item->monto;
+            $plan->ppa_cuota_cambio = $item->monto_cambio;
+            $plan->ppa_interes_mensual = $item->interes_mensual;
+            $plan->ppa_amortizacion_mensual = $item->amortizacion;
+            $plan->ppa_saldo = $item->saldo;
+            $plan->save();
+            
+            if($primer_pago == 0){
+                // $recibo = new ReciboPago();
+                // $recibo->rep_observacion = $item->observacion;
+            }
+        }
+
         return redirect('contratos/');
         
     }
@@ -170,4 +210,73 @@ class ContratoController extends Controller
     {
         //
     }
+
+    public function redaccion($id)
+    {
+        $id = Crypt::decryptString($id);
+        $contrato = Contrato::where('con_id', $id)->first();        
+
+        $moneda = "";
+        if($contrato->con_moneda == 0){
+            $moneda = "BOLIVIANOS";
+        }else{
+            $moneda = "DOLARES AMERICANOS";
+        }
+
+        $converterM2 = new Converter("METROS CUADRADOS", "centavos", Language::SPANISH);
+        $converterMoney = new Converter($moneda,"centavos", Language::SPANISH);
+
+        $superficie_literal = $converterM2->convert(floatval($contrato->propiedad->pro_superficie));
+        $superficie_literal = substr($superficie_literal, 0, strlen($superficie_literal)-4);
+        $monto_total_literal = $converterMoney->convert(floatVal($contrato->con_precio_total));
+        $monto_total_literal = substr($monto_total_literal, 0, strlen($monto_total_literal)-4);
+        $pago_inicial_literal = $converterMoney->convert(floatVal($contrato->con_pago_inicial));
+        $pago_inicial_literal = substr($pago_inicial_literal, 0, strlen($pago_inicial_literal)-4);
+
+        return view('contratos.form_redactar_contrato', ['titulo'=>'Redactar contrato',
+                                                          'superficie_literal' => $superficie_literal,
+                                                          'monto_total_literal' => $monto_total_literal,
+                                                          'pago_inicial_literal' => $pago_inicial_literal,
+                                                          'contrato' => $contrato,
+                                                          'modulo_activo' => $this->modulo
+                                                         ]);
+    }
+
+    public function plan_pago($id)
+    {
+        $id = Crypt::decryptString($id);
+        $contrato = Contrato::where('con_id', $id)->first();        
+        $configuracion = ConfiguracionProgramaPago::where('con_id', $id)->first();
+        $cuotas = ProgramaPago::where("cof_id", $configuracion->cof_id)->get();
+        return view('contratos.plan_pagos', ['titulo'=>'Plan de pagos',
+                                                          'configuracion' => $configuracion,
+                                                          'contrato' => $contrato,
+                                                          'cuotas' => $cuotas,
+                                                          'modulo_activo' => $this->modulo
+                                                         ]);
+    }
+
+    public function adjuntos($id)
+    {
+        $id = Crypt::decryptString($id);
+        $contrato = Contrato::where('con_id', $id)->first();        
+        $adjuntos = AdjuntoContrato::where("con_id", $id)->get();
+        return view('contratos.lista_adjuntos_contratos', ['titulo'=>'Adjuntos de contrato',
+                                                          'contrato' => $contrato,
+                                                          'adjuntos' => $adjuntos,
+                                                          'modulo_activo' => $this->modulo
+                                                         ]);
+    }
+
+    public function nuevo_adjunto($id)
+    {
+        $id = Crypt::decryptString($id);
+        $contrato = Contrato::where('con_id', $id)->first();        
+        return view('contratos.form_nuevo_adjunto_contrato', ['titulo'=>'Nuevo adjunto de contrato',
+                                                          'contrato' => $contrato,
+                                                          'modulo_activo' => $this->modulo
+                                                         ]);
+    }
+
+
 }

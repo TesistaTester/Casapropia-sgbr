@@ -15,7 +15,7 @@ class ProgramaPago extends Model
     METODOS PARA RELACIONES
     ------------------------------------------------------------------------
      */
-    public function recibo_pago(){
+    public function recibos(){
         return $this->hasMany(ReciboPago::class, 'ppa_id');
     }
     public function configuracion_programa(){

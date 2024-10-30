@@ -182,7 +182,7 @@
 												<div class="col-md-3">
 													<div class="form-group">
 															<label class="label-blue label-block" for="">
-																Precio total:
+																Precio de venta:
 																<span class="text-danger">*</span>
 																<i class="fa fa-question-circle float-right" title="Establecer el total de venta de la propiedad"></i>
 															</label>
@@ -289,6 +289,25 @@
 																<i class="fa fa-question-circle float-right" title="Establecer la fecha de contrato."></i>
 															</label>
 														<input required type="date" value="{{old('con_fecha_contrato', date('Y-m-d'))}}" class="form-control @error('con_fecha_contrato') is-invalid @enderror" name="con_fecha_contrato" id="con_fecha_contrato" placeholder="Fecha de contrato">
+														@error('con_fecha_contrato')
+														<div class="invalid-feedback">
+															{{$message}}
+														</div>											
+														@enderror
+													</div>
+												</div>
+												<div class="col-md-4">
+													<div class="form-group">
+															<label class="label-blue label-block" for="">
+																Precio total (+ intereses):
+																<i class="fa fa-question-circle float-right" title="Establecer la fecha de contrato."></i>
+															</label>
+														<input required type="number" value="{{old('con_fecha_contrato', date('Y-m-d'))}}" class="form-control @error('con_fecha_contrato') is-invalid @enderror" name="con_fecha_contrato" id="con_fecha_contrato" placeholder="Precio total final" disabled>
+														<div>
+															<small>
+																Este campo se genera automaticamente despues de crear su plan de pagos
+															</small>
+														</div>											
 														@error('con_fecha_contrato')
 														<div class="invalid-feedback">
 															{{$message}}
@@ -504,33 +523,39 @@
 					<td id="txt_interes"></td>
 				</tr>
 			</table>
-			<table class="table table-sm table-bordered">
-				<thead>
-					<tr>
-						<td>NRO</td>
-						<td>FECHA</td>
-						<td>MONTO PAGO (USD)</td>
-						<td>MONTO PAGO (Bs)</td>
-						<td>INTERES MESUAL</td>
-						<td>AMORTIZACION</td>
-						<td>SALDO</td>
-						<td>OBSERVACION</td>
-					</tr>
-				</thead>
-				<tbody id="tabla-plan-pagos">
-					<tr>
-						<td>1</td>
-						<td>01-08-2024</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-						<td>0</td>
-					</tr>	
-				</tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table table-sm table-bordered">
+					<thead>
+						<tr style="font-weight: bold">
+							<td>NRO</td>
+							<td>FECHA</td>
+							<td>MONTO PAGO (USD)</td>
+							<td>MONTO PAGO (Bs)</td>
+							<td>INTERES MESUAL</td>
+							<td>AMORTIZACION</td>
+							<td>SALDO</td>
+							<td>OBSERVACION</td>
+						</tr>
+					</thead>
+					<tbody id="tabla-plan-pagos">
+						<tr>
+							<td>1</td>
+							<td>01-08-2024</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>	
+					</tbody>
+				</table>	
+			</div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer box-buttons-planes">
           <button type="button" id="btn-entendido" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" id="btn-edita-plan-pagos" class="btn btn-primary">
+			<i class="fa fa-edit"></i>
+			Editar plan de pagos
+		  </button>
           <button type="button" id="btn-guarda-plan-pagos" class="btn btn-success" data-dismiss="modal">
 			<i class="fa fa-check"></i>
 			Guardar plan de pagos
@@ -736,10 +761,13 @@
 
 <script>
 $(function(){
+	$('#btn-edita-plan-pagos').hide();
 	//select2 buscador
 	$('.search-items').select2({language:"es"});
 
-	$('#btn-genera-plan-pagos').click(function(e){
+	$('body').on("click", "#btn-genera-plan-pagos",function(e){
+		$('#btn-edita-plan-pagos').hide();
+
 		var data_plan = [];//vaciamos data_plan
 		var x = null;
 		$('#tabla-plan-pagos').html('');//vaciamos el html 
@@ -765,8 +793,10 @@ $(function(){
 
 		let saldo = monto;
 
+		console.log("GENERANDO PLANDE PAGOS");
 		// al contado
 		if(tipo_venta == 0){
+			console.log("CONTADO");
 			saldo = monto - cuota_inicial;
 			const nuevoMes = fecha.getMonth() + iterador_meses;
 			fecha.setMonth(nuevoMes);
@@ -774,9 +804,10 @@ $(function(){
 			var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
 			var anio = fecha.getFullYear(); // Año
 			var fecha_actual = dia+"-"+mes+"-"+anio;
+			var monto_cambio = Math.round((cuota_inicial*tasa_cambio)*100)/100;
 
-			$('#tabla-plan-pagos').append('<tr><td>1</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>PAGO AL CONTADO</td></tr>');
-			x = {'nro':1, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'PAGO AL CONTADO'};
+			$('#tabla-plan-pagos').append('<tr><td>1</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(monto_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>PAGO AL CONTADO</td></tr>');
+			x = {'nro':1, 'fecha':fecha_actual, 'monto':cuota_inicial,'monto_cambio':monto_cambio, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'PAGO AL CONTADO'};
 			data_plan.push(x);
 			// console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
 			console.log(data_plan);
@@ -784,17 +815,23 @@ $(function(){
 		}
 		// a pagos
 		if(tipo_venta == 1){
+			console.log("PAGOS");
+			$('#btn-edita-plan-pagos').show();
 			const nuevoMes = fecha.getMonth() + iterador_meses;
 			fecha.setMonth(nuevoMes);
 			var dia = fecha.getDate(); // Día del mes
 			var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
 			var anio = fecha.getFullYear(); // Año
-			var fecha_actual = dia+"-"+mes+"-"+anio;
+			if(mes < 10){
+				mes = "0" + mes;
+			}
+			var fecha_actual = anio+"-"+mes+"-"+dia;
 			saldo = monto - cuota_inicial;
 			iterador_meses++;
+			var monto_cambio = Math.round((cuota_inicial*tasa_cambio)*100)/100;
 
-			$('#tabla-plan-pagos').append('<tr><td>0</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>CUOTA INICIAL</td></tr>');
-			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
+			$('#tabla-plan-pagos').append('<tr><td>0</td><td><input class="form-control" type="date" value="'+fecha_actual+'"></td><td><input class="form-control" type="number" value="'+cuota_inicial+'"></td><td><input class="form-control" type="number" value="'+monto_cambio+'"></td><td>0</td><td>0</td><td><input class="form-control" type="number" value="'+saldo+'"></td><td>CUOTA INICIAL</td></tr>');
+			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial,'monto_cambio':monto_cambio, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
 			data_plan.push(x);
 
 			console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
@@ -817,12 +854,15 @@ $(function(){
 				var dia = fecha.getDate(); // Día del mes
 				var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
 				var anio = fecha.getFullYear(); // Año
-				var fecha_actual = dia+"-"+mes+"-"+anio;
+				if(mes < 10){
+					mes = "0" + mes;
+				}
+				var fecha_actual = anio+"-"+mes+"-"+dia;
+				monto_cambio = Math.round((monto_pago*tasa_cambio)*100)/100;
 
-				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td>'+fecha_actual+'</td><td>'+monto_pago+'</td><td>'+(monto_pago*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td></td></tr>');
-				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':''};
+				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td><input class="form-control" type="date" value="'+fecha_actual+'"></td><td><input class="form-control" type="number" value="'+monto_pago+'"></td><td><input class="form-control" type="number" value="'+monto_cambio+'"></td><td>0</td><td>0</td><td><input class="form-control" type="number" value="'+saldo+'"></td><td></td></tr>');
+				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago,'monto_cambio':monto_cambio, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':''};
 				data_plan.push(x);
-
 				console.log("Mes: "+i+" Monto: "+monto_pago+" SALDO: "+saldo);
 
 				i++;
@@ -833,6 +873,7 @@ $(function(){
 		}
 		// a credito
 		if(tipo_venta == 2 && interes_anual > 0){
+			console.log("CREDITO");
 			const nuevoMes = fecha.getMonth() + iterador_meses;
 			fecha.setMonth(nuevoMes);
 			var dia = fecha.getDate(); // Día del mes
@@ -841,9 +882,10 @@ $(function(){
 			var fecha_actual = dia+"-"+mes+"-"+anio;
 			saldo = monto - cuota_inicial;
 			iterador_meses++;
+			var monto_cambio = Math.round((cuota_inicial*tasa_cambio)*100)/100;
 
-			$('#tabla-plan-pagos').append('<tr><td>0</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(cuota_inicial*tasa_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>CUOTA INICIAL</td></tr>');
-			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
+			$('#tabla-plan-pagos').append('<tr><td>0</td><td>'+fecha_actual+'</td><td>'+cuota_inicial+'</td><td>'+(monto_cambio)+'</td><td>0</td><td>0</td><td>'+saldo+'</td><td>CUOTA INICIAL</td></tr>');
+			x = {'nro':0, 'fecha':fecha_actual, 'monto':cuota_inicial,'monto_cambio':monto_cambio, 'interes_mensual':0, 'amortizacion':0, 'saldo':saldo, 'observacion':'CUOTA INICIAL'};
 			data_plan.push(x);
 			console.log("Mes: 0 Monto: "+monto+" Cuota inicial: "+cuota_inicial+" Saldo:"+saldo);
 			monto = saldo;
@@ -871,25 +913,34 @@ $(function(){
 				var mes = fecha.getMonth() + 1; // Mes (enero es 0, por eso se suma 1)
 				var anio = fecha.getFullYear(); // Año
 				var fecha_actual = dia+"-"+mes+"-"+anio;
+				monto_cambio = Math.round((monto_pago*tasa_cambio)*100)/100;
 
-				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td>'+fecha_actual+'</td><td>'+monto_pago+'</td><td>'+(monto_pago*tasa_cambio)+'</td><td>'+IM+'</td><td>'+AM+'</td><td>'+saldo+'</td><td></td></tr>');
-				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago, 'interes_mensual':IM, 'amortizacion':AM, 'saldo':saldo, 'observacion':''};
+				$('#tabla-plan-pagos').append('<tr><td>'+i+'</td><td>'+fecha_actual+'</td><td>'+monto_pago+'</td><td>'+(monto_cambio)+'</td><td>'+IM+'</td><td>'+AM+'</td><td>'+saldo+'</td><td></td></tr>');
+				x = {'nro':i, 'fecha':fecha_actual, 'monto':monto_pago,'monto_cambio':monto_cambio, 'interes_mensual':IM, 'amortizacion':AM, 'saldo':saldo, 'observacion':''};
 				data_plan.push(x);
 				console.log("Mes: "+i+" Monto: "+monto_pago+" I: "+IM+" A: "+AM+" SALDO: "+saldo);
 				i++;
 			}
-
 			console.log(data_plan);
 			$('#campo_plan_pagos').val(JSON.stringify(data_plan));
-
 		}
 		if(tipo_venta == 2 && interes_anual <= 0){
 			$('#tabla-plan-pagos').append('<tr><td colspan="7"><div class="alert alert-warning">Para un plan a credito, el interes anual debe ser mayor a 0. Revise los datos de entrada e intente nuevamente.</div></td></tr>');
 		}
 
-
 	});
 
+
+	/*
+	* EDITA PLAN DE PAGOS
+	*/
+	$('body').on('click', '#btn-edita-plan-pagos', function(){
+		let tds = $('#tabla-plan-pagos td');
+		let td_text = $('#tabla-plan-pagos td');
+		$.each(td_text, function( i, item ) {
+			console.log(item);
+		});
+	});
 	/*
 	* Verificación de duplicados de persona en bd
 	* Evento: focusout

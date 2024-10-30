@@ -5,90 +5,115 @@
 
 <div class="col-md-10 content-pane">
     <h3 class="title-header" style="text-transform: uppercase;">
-        <i class="fa fa-id-card"></i>
+        <i class="fa fa-dollar"></i>
         {{$titulo}}
-        <a href="{{url('clientes/nuevo')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO CLIENTE</a>
+        <a href="{{url('contratos')}}" title="Volver a lista de contratos" data-placement="top" class="btn btn-sm btn-secondary float-right" style="margin-left:10px;"><i class="fa fa-angle-double-left"></i> ATRÁS</a>
     </h3>
     <div class="row">
         <div class="col-12">
                 <!-- inicio card  -->
                 <div class="card card-stat">
                     <div class="card-body">
-                        @if($clientes->count() == 0)
+                        <div class="alert alert-secondary">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4><span class="text-success">CONTRATO: </span> {{$contrato->con_codigo_contrato}}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4><span class="text-success">LOTE: </span>{{$contrato->propiedad->lote->lot_codigo}} MNZO.{{$contrato->propiedad->lote->manzano->man_nombre}} URB. {{$contrato->propiedad->lote->manzano->urbanizacion->urb_nombre}}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4><span class="text-success">PRECIO TOTAL: </span> 
+                                        {{$contrato->con_precio_total}} 
+                                        @php
+                                        $moneda_cad = '';                                            
+                                        @endphp
+                                        @if ($contrato->con_moneda == 0)
+                                        Bs
+                                        @php
+                                        $moneda_cad = Bs    
+                                        @endphp
+                                        @else 
+                                        $US
+                                        @php
+                                        $moneda_cad = '$US'    
+                                        @endphp
+                                        @endif
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        @if($cuotas->count() == 0)
                         <div class="alert alert-info">
                             <div class="media">
                                 <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
                                 <div class="media-body">
                                     <h5 class="mt-0">Nota.-</h5>
                                     <p>
-                                        NO se tienen clientes registrados hasta el momento.
+                                        NO se tienen cuotas registrados hasta el momento.
                                     </p>
                                 </div>
                             </div>
                         </div>
                         @else
-                        <table class="table table-bordered tabla-datos-clientes">
+                        <table class="table table-bordered tabla-datos-contratos">
                             <thead>
                             <tr>
-                                <th>FOTOGRAFÍA</th>
-                                <th>TIPO PERSONA</th>
-                                <th>NRO DOCUMENTO</th>
-                                <th>NOMBRE COMPLETO</th>
-                                <th>ACTIVIDAD ECONÓMICA</th>
-                                <th>FECHA DE REGISTRO</th>
-                                <th>OPCION</th>
+                                <th class="text-center">NRO</th>
+                                <th class="text-center">FECHA PROGRAMADA</th>
+                                <th class="text-center">CUOTA</th>
+                                <th class="text-center">SALDO</th>
+                                <th class="text-center">COMPLETADO</th>
+                                <th class="text-center">VENCIMIENTO</th>
+                                <th class="text-center">OPCION</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($clientes as $item)
+                            @foreach($cuotas as $item)
                             <tr>
-                                <td>
-                                    <img style="width:100px !important;" class="img-thumbnail" src="{{asset('storage/'.$item->cli_foto)}}">
-                                </td>
-                                <td>
-                                    @if($item->persona->per_tipo_persona == 0)
-                                    NATURAL
-                                    @endif
-                                    @if($item->persona->per_tipo_persona == 1)
-                                    JURIDICA
-                                    @endif
+                                <td class="text-center">
+                                    {{$item->ppa_nro}}
                                 </td>
                                 <td class="text-center">
-                                    @if($item->persona->per_tipo_documento == 0)
-                                    CI:
-                                    @endif
-                                    @if($item->persona->per_tipo_documento == 1)
-                                    LM:
-                                    @endif
-                                    @if($item->persona->per_tipo_documento == 2)
-                                    OTRO:
-                                    @endif
-                                    {{$item->persona->per_nro_id}}
-                                    @if($item->persona->per_tipo_documento == 0)
-                                    {{$item->persona->per_expedido}}
-                                    @endif
+                                    {{$item->ppa_fecha_programada}}
                                 </td>
                                 <td class="text-center">
-                                    {{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}}
-                                </td>
-                                <td>
-                                    {{$item->actividad_economica->first()->ace_descripcion}}
+                                    {{$item->ppa_cuota_programada}} <small>{{$moneda_cad}}</small>
                                 </td>
                                 <td class="text-center">
-                                    {{$item->updated_at}}
+                                    {{$item->ppa_saldo}} <small>{{$moneda_cad}}</small>
                                 </td>
                                 <td>
+                                    @php
+                                        $cancelado = 0
+                                    @endphp
+                                    @if($item->ppa_completado)
+                                    <button class="btn btn-success btn-sm">SI</button>
+                                    @else
+                                    <span class="text-success" style="font-size:.8em;"> CANCELADO:</span>
+                                        @if($item->recibos->count() == 0)
+                                         {{$cancelado}} <small>{{$moneda_cad}}</small>
+                                        @else
+                                        @foreach ($item->recibos as $k)
+                                            $cancelado = $cancelado + $k->rep_monto_pago;
+                                        @endforeach
+                                            {{$cancelado}} <small>{{$moneda_cad}}</small>
+                                        @endif
+                                    <br>
+                                    <span class="text-success" style="font-size:.8em;">SALDO PARCIAL:</span> {{$item->ppa_cuota_programada - $cancelado}} <small>{{$moneda_cad}}</small>
+                                    @endif
+                                </td>
+                                <td class="text-center">                                    
+                                    {{$item->ppa_fecha_vencimiento}}
+                                </td>
+                                <td class="text-center">
                                     <div class="dropdown">
                                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         OPCION
                                       </button>
                                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                         <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
-                                         @if($item->contratos()->count() > 0)
-                                         <a class="dropdown-item" title="El cliente tiene contratos registrados. No es posible eliminar este registro." href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                         @else
-                                         <a class="dropdown-item btn-eliminar-cliente" data-cli-id="{{Crypt::encryptString($item->cli_id)}}" data-cli-nombre-completo="{{$item->persona->per_nombres}} {{$item->persona->per_primer_apellido}} {{$item->persona->per_segundo_apellido}}" data-toggle="modal" data-target="#modal-eliminar-cliente" href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                         @endif
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->ppa_id).'/plan_pagos')}}"><i class="fa fa-eye"></i> Realizar pago</a>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->ppa_id).'/plan_pagos')}}"><i class="fa fa-eye"></i> Ver saldo parcial</a>
                                       </div>
                                     </div>
                                 </td>
@@ -161,7 +186,7 @@ $(function(){
     * CONFIGURACION DATA TABLES
     -------------------------------------------------------------
     */
-    $('.tabla-datos-clientes').DataTable({"language":{url: '{{asset('js/datatables-lang-es.json')}}'}, "order": [[ 5, "desc" ]]});
+    $('.tabla-datos-contratos').DataTable({"language":{url: '{{asset('js/datatables-lang-es.json')}}'}, "order": [[ 7, "desc" ]]});
 
 
     /*

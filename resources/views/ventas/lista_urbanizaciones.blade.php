@@ -58,10 +58,10 @@
 		// AGREGAR POP-UPS: Funcion oneachfeature
 		function ponerTitulo(feature, layer) {
 			// does this feature have a property named 
-			if (feature.properties && feature.properties.Id) {
-				layer.bindPopup("<h3>SALUDOS</h3>");
-			}
-			layer.bindPopup("<h3>SALUDOS</h3>");
+			// if (feature.properties && feature.properties.Id) {
+			// 	layer.bindPopup("<h3>OPERACIONES</h3>");
+			// }
+			layer.bindPopup('<h5 class="text-primary">OPERACIONES</h5><p>Seleccione una opción:</p><button class="btn btn-sm btn-success">Registrar contrato</button>&nbsp;<button class="btn btn-sm btn-success">Reservar</button>&nbsp;<button class="btn btn-sm btn-success">Registrar cliente</button>');
 			// console.log("Un feature");
             // var centroid = turf.centroid(feature);
             // var latlng = L.latLng(centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]);

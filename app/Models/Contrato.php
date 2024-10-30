@@ -22,10 +22,10 @@ class Contrato extends Model
     public function reconocimiento(){
         return $this->hasOne(ReconocimientoFirma::class, 'con_id');
     }
-    public function firmas_clientes(){
+    public function clientes(){
         return $this->hasMany(FirmaCliente::class, 'con_id');
     }
-    public function firmas_legales(){
+    public function legales(){
         return $this->hasMany(FirmaPropietarioLegal::class, 'con_id');
     }
     public function adjuntos(){

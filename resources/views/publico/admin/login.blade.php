@@ -25,7 +25,7 @@
 								<input autocomplete="false" name="hidden" type="text" style="display:none;">
 								<div class="form-group">
 								  <label class="text-primary">E-mail: </label>
-								  <input required type="mail" class="form-control form-control-lg" name="uuo" id="uuo" placeholder="Escriba su correo eletrónico." autocomplete="false" autofocus>
+								  <input required type="email" class="form-control form-control-lg" name="uuo" id="uuo" placeholder="Escriba su correo eletrónico." autocomplete="false" autofocus>
 								</div>
 								<div class="form-group">
 								  <label class="text-primary">Contraseña: </label>

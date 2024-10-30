@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('cof_plazo');
             $table->double('cof_pago_inicial');
             $table->integer('cof_moneda');
+            $table->integer('cof_tasa_cambio');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('con_id')->references('con_id')->on('contrato');

@@ -27,12 +27,13 @@
                             </div>
                         </div>
                         @else
-                        <table class="table table-bordered tabla-datos-clientes">
+                        <table class="table table-bordered tabla-datos-contratos">
                             <thead>
                             <tr>
                                 <th>NRO CONTRATO</th>
+                                <th>TIPO CONTRATO</th>
+                                <th>COD. LOTE</th>
                                 <th>PRECIO TOTAL</th>
-                                <th>MONEDA</th>
                                 <th>TIPO DE VENTA</th>
                                 <th>PAGO INICIAL</th>
                                 <th>PLAZO</th>
@@ -48,13 +49,43 @@
                                     {{$item->con_nro_contrato}}
                                 </td>
                                 <td>
+                                    @if ($item->con_tipo == 0)
+                                        COMPRAVENTA
+                                    @endif
+                                    @if ($item->con_tipo == 1)
+                                        CANCELACION
+                                    @endif
+                                    @if ($item->con_tipo == 2)
+                                        TRASPASO DE PROPIETARIOS
+                                    @endif
+                                    @if ($item->con_tipo == 3)
+                                        TRASPASO DE LOTES
+                                    @endif
+                                    @if ($item->con_tipo == 3)
+                                        DEVOLUCION
+                                    @endif
+                                </td>
+                                <td>
+                                    {{$item->propiedad->lote->lot_codigo}}
+                                </td>
+                                <td>
                                     {{$item->con_precio_total}}
+                                    @if($item->con_moneda == 0)
+                                    [Bs]
+                                    @else
+                                    [$US]
+                                    @endif
                                 </td>
                                 <td>
-                                    {{$item->con_moneda}}
-                                </td>
-                                <td>
-                                    {{$item->con_tipo_venta}}
+                                    @if ($item->con_tipo_venta == 0)
+                                    AL CONTADO
+                                    @endif
+                                    @if ($item->con_tipo_venta == 1)
+                                    PAGOS
+                                    @endif
+                                    @if ($item->con_tipo_venta == 2)
+                                    CREDITO
+                                    @endif
                                 </td>
                                 <td>
                                     {{$item->con_pago_inicial}}
@@ -68,28 +99,26 @@
                                 <td>
                                     {{$item->con_fecha_contrato}}
                                 </td>
-                                <td class="text-center">
-                                    {{$item->updated_at}}
-                                </td>
                                 <td>
                                     <div class="dropdown">
                                       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         OPCION
                                       </button>
                                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-eye"></i> Ver plan de pagos</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-plus"></i> Nuevo plan de pagos</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato de compraventa</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato de cancelacion</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar minuta</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-upload"></i> Adjuntar documentos</a>
-                                        <a class="dropdown-item" href="{{url('clientes/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar contrato</a>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->con_id).'/redaccion')}}"><i class="fa fa-file-text"></i> Redactar documento</a>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->con_id).'/plan_pago')}}"><i class="fa fa-dollar"></i> Plan de pagos</a>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->con_id).'/adjuntos')}}"><i class="fa fa-upload"></i> Adjuntos digitalizados</a>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->con_id).'/editar')}}"><i class="fa fa-check-square-o"></i> Validación de firmas</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-edit"></i> Editar datos</a>
                                          @if($item->adjuntos()->count() > 0)
                                          <a class="dropdown-item" title="El cliente tiene contratos registrados. No es posible eliminar este registro." href="#"><i class="fa fa-trash"></i> Eliminar</a>
                                          @else
                                          <a class="dropdown-item btn-eliminar-cliente" data-cli-id="{{Crypt::encryptString($item->con_id)}}" data-cli-nombre-completo="" data-toggle="modal" data-target="#modal-eliminar-cliente" href="#"><i class="fa fa-trash"></i> Eliminar</a>
                                          @endif
-                                      </div>
+                                         <div class="dropdown-divider"></div>
+                                         <a title="Reconocimiento de firmas, contrato de cancelacion, minuta, etc." class="dropdown-item" href="{{url('contratos/'.Crypt::encryptString($item->cli_id).'/editar')}}"><i class="fa fa-cog"></i> Tramites/documentos asociados</a>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -100,8 +129,6 @@
                     </div>
                 </div>
                 <!-- fin card  -->
-
-
 
         </div>
     </div>
@@ -161,173 +188,7 @@ $(function(){
     * CONFIGURACION DATA TABLES
     -------------------------------------------------------------
     */
-    $('.tabla-datos-clientes').DataTable({"language":{url: '{{asset('js/datatables-lang-es.json')}}'}, "order": [[ 5, "desc" ]]});
-
-
-    /*
-
-    --------------------------------------------------------------
-    REGISTRAR ASIGNACIÓN PROPIETARIO REAL
-    --------------------------------------------------------------
-    */
-    //inicialización de valores
-    // $('#box-participacion').hide();
-    // $('#btn-clear-propietario-real').hide();    
-    // $('#btn-guardar-adicionar-propietario-real').hide();
-
-    //Evento: click al adicionar propietario real
-    // $('.btn-adicionar-prr').click(function(){
-    //     let prop_id = $(this).attr('data-prrid');
-    //     let prop_nombre = $(this).parent().prev('td').html();
-    //     $('#txt-propietario-real').html(prop_nombre);
-    //     $('#prr_id').val(prop_id);
-    //     $('#btn-guardar-adicionar-propietario-real').show();
-    //     $('#btn-clear-propietario-real').show();    
-    //     $('#table-propietarios-reales').slideUp(700);
-    //     $('#box-participacion').slideDown(2000);
-    // });
-    //Evento: limpiar el propietario real seleccionado
-    // $('#btn-clear-propietario-real').click(function(){
-    //     $('#btn-guardar-adicionar-propietario-real').hide();
-    //     $('#btn-clear-propietario-real').hide();    
-    //     $('#box-participacion').slideUp(700);
-    //     $('#table-propietarios-reales').slideDown(2000);
-    //     $('#apr_participacion').val(0);
-    //     $('#apr_descripcion').val('');
-    // });
-    //Modificacion del porcentaje de asignacion
-    // $('#apr_participacion').on('input',function(){
-    //     $(this).next('small').find('output').val($(this).val());
-    // });
-
-    /*
-    --------------------------------------------------------------
-    REGISTRAR ASIGNACIÓN PROPIETARIO LEGAL
-    --------------------------------------------------------------
-    */
-    //inicialización de valores
-    // $('#box-propietarios-legales').hide();
-    // $('#btn-clear-propietario-legal').hide();    
-    // $('#btn-guardar-adicionar-propietario-legal').hide();
-
-    //Evento: click al adicionar propietario legal
-    // $('.btn-adicionar-ple').click(function(){
-    //     let prop_id = $(this).attr('data-pleid');
-    //     let prop_nombre = $(this).parent().prev('td').html();
-    //     $('#txt-propietario-legal').html(prop_nombre);
-    //     $('#ple_id').val(prop_id);
-    //     $('#btn-guardar-adicionar-propietario-legal').show();
-    //     $('#btn-clear-propietario-legal').show();    
-    //     $('#table-propietarios-legales').slideUp(700);
-    //     $('#box-propietarios-legales').slideDown(2000);
-    //     console.log($('#ple_id').val());
-    // });
-    //Evento: limpiar el propietario legal seleccionado
-    // $('#btn-clear-propietario-legal').click(function(){
-    //     $('#btn-guardar-adicionar-propietario-legal').hide();
-    //     $('#btn-clear-propietario-legal').hide();    
-    //     $('#box-propietarios-legales').slideUp(700);
-    //     $('#table-propietarios-legales').slideDown(2000);
-    //     $('#apl_descripcion').val('');
-    // });
-    /*
-    --------------------------------------------------------------
-    EDITAR ASIGNACIÓN PROPIETARIO REAL
-    --------------------------------------------------------------
-    */
-//    $('.btn-editar-apr').click(function(){
-//        let participacion_item = $(this).attr('data-item-participacion');
-//        let descripcion = $(this).attr('data-item-descripcion');
-//        let apr_id = $(this).attr('data-aprid');
-//        let nombre = $(this).parents('td').siblings('.prr_nombre').html();
-//        $('#txt-propietario-real-editar-apr').html(nombre);
-//        let participacion_disponible = $('#apr_participacion_disponible').val();
-//        max_participacion = parseInt(participacion_item) + parseInt(participacion_disponible);
-//        $('#apr_participacion_edit').attr('max',max_participacion);
-//        $('#txt_apr_participacion_disponible').html(max_participacion);
-//        $('#apr-porcent-participacion').html(participacion_item);
-//        //form data
-//        $('#apr_participacion_edit').val(participacion_item);
-//        $('#apr_descripcion_edit').val(descripcion);
-//        action = $('#form-editar-apr').attr('data-action');
-//        action = action+'/'+apr_id;
-//        $('#form-editar-apr').attr('action',action);
-//    });
-//     //Modificacion del porcentaje de asignacion
-//     $('#apr_participacion_edit').on('input',function(){
-//         $(this).next('small').find('output').val($(this).val());
-//     });
-//     /*
-//     --------------------------------------------------------------
-//     EDITAR ASIGNACIÓN PROPIETARIO LEGAL
-//     --------------------------------------------------------------
-//     */
-//    $('.btn-editar-apl').click(function(){
-//        let descripcion = $(this).attr('data-item-descripcion');
-//        let apl_id = $(this).attr('data-aplid');
-//        let nombre = $(this).parents('td').siblings('.ple_nombre').html();
-//        $('#txt-propietario-legal-editar-apl').html(nombre);
-//        //form data
-//        $('#apl_descripcion_edit').val(descripcion);
-//        action = $('#form-editar-apl').attr('data-action');
-//        action = action+'/'+apl_id;
-//        $('#form-editar-apl').attr('action',action);
-//    });
-//     /*
-//     --------------------------------------------------------------
-//     ELIMINAR ASIGNACIÓN PROPIETARIO REAL
-//     --------------------------------------------------------------
-//     */
-//     $('.btn-eliminar-apr').click(function(){
-//        let apr_id = $(this).attr('data-aprid');
-//        let participacion = $(this).attr('data-item-participacion');
-//        let nombre = $(this).parents('td').siblings('.prr_nombre').html();
-//        $('#txt-apr-eliminar-propietario').html(nombre);
-//        $('#txt-apr-eliminar-participacion').html(participacion);
-//        console.log(nombre);
-//        console.log(participacion);
-//        //form data
-//        action = $('#form-eliminar-apr').attr('data-action');
-//        action = action+'/'+apr_id;
-//        $('#form-eliminar-apr').attr('action',action);
-//    });
-//     /*
-//     --------------------------------------------------------------
-//     ELIMINAR ASIGNACIÓN PROPIETARIO LEGAL
-//     --------------------------------------------------------------
-//     */
-//     $('.btn-eliminar-apl').click(function(){
-//        let apl_id = $(this).attr('data-aplid');
-//        let nombre = $(this).parents('td').siblings('.ple_nombre').html();
-//        $('#txt-apl-eliminar-propietario').html(nombre);
-//        //form data
-//        action = $('#form-eliminar-apl').attr('data-action');
-//        action = action+'/'+apl_id;
-//        $('#form-eliminar-apl').attr('action',action);
-//    });
-    /*
-    --------------------------------------------------------------
-    ELIMINAR MODALIDAD
-    --------------------------------------------------------------
-    */
-//     $('.btn-eliminar-modalidad').click(function(){
-//        let mov_id = $(this).attr('data-mov-id');
-//        let mov_tipo_venta = $(this).attr('data-mov-tipo');
-//        let mov_moneda_venta = $(this).attr('data-mov-moneda');
-//        let mov_precio_oferta = $(this).attr('data-mov-precio-oferta');
-//        let mov_precio_minimo = $(this).attr('data-mov-precio-minimo');
-//        if(mov_tipo_venta == '0'){$('#txt-mov-tipo-venta').html('AL CONTADO')}
-//        if(mov_tipo_venta == '1'){$('#txt-mov-tipo-venta').html('A PAGOS')}
-//        if(mov_tipo_venta == '2'){$('#txt-mov-tipo-venta').html('A CRÉDITO')}
-//        if(mov_moneda_venta == '0'){$('#txt-mov-moneda-venta').html('BOLIVIANOS')}
-//        if(mov_moneda_venta == '1'){$('#txt-mov-moneda-venta').html('DOLARES')}
-//        $('#txt-mov-precio-oferta').html(mov_precio_oferta);
-//        $('#txt-mov-precio-minimo').html(mov_precio_minimo);
-//        //form data
-//        action = $('#form-eliminar-modalidad').attr('action');
-//        action = action+'/'+mov_id;
-//        $('#form-eliminar-modalidad').attr('action',action);
-//    });
+    $('.tabla-datos-contratos').DataTable({"language":{url: '{{asset('js/datatables-lang-es.json')}}'}, "order": [[ 7, "desc" ]]});
 
     /*
     --------------------------------------------------------------

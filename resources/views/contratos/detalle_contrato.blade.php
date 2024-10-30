@@ -13,18 +13,17 @@
     <div class="row">
         <div class="col-12" style="padding-right:0; border-right:2px solid #0d4a9a;">
             <div class="nav nav-pills" id="v-pills-tab">
-                <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-database"></i> Datos generales</a>
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa fa-database"></i> Datos generales</a>
                 <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa fa-apple"></i> Manzanos</a>
                 <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-building"></i> Lotes</a>
                 <a class="nav-link" id="v-pills-documents-tab" data-toggle="pill" href="#v-documents" role="tab" aria-controls="v-pills-documents" aria-selected="false"><i class="fa fa-folder-open"></i> Documentos adjuntos</a>
-                <a class="nav-link active" id="v-pills-messages-tab" data-toggle="pill" href="#v-mapas" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa fa-map"></i> Planos geolocalizados</a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                     <h3 class="subtitle-header"><i class="fa fa-database"></i> DATOS GENERALES
                         {{-- <a href="#" title="Eliminar urbanización" data-toggle="modal" data-target="#modal-eliminar-urbanizacion" class="btn btn-sm btn-danger float-right" style="margin-left:10px;"><i class="fa fa-trash"></i> ELIMINAR</a>
                         <a href="{{url('urbanizaciones/'.$urbanizacion->urb_id.'/editar')}}" title="Editar datos de urbanización" class="btn btn-sm btn-primary float-right" style="margin-left:10px;"><i class="fa fa-edit"></i> EDITAR</a> --}}
@@ -32,319 +31,34 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- inicio card  -->
-                            <div class="card mb-3">
-                              <div class="row no-gutters">
-                                <div class="col-md-3">
-                                        <img class="corner-47" style="width: 100%" src="{{asset('img/bg-urbanizacion.png')}}" alt="Foto urbanizacion">
-                                    <a title="Actualizar fotografía de la urbanización" href="{{asset('urbanizaciones/detalle/1')}}" class="btn btn-primary btn-block btn-sm corner-0 corner-37"><i class="fa fa-image"></i> ACTUALIZAR FOTO</a>
-                                </div>
-                                <div class="col-md-9">
-                                  <div class="card-body">
-                                    <h2 class="card-title"><strong><span class="text-primary">URBANIZACION:</span> {{Str::upper($urbanizacion->urb_nombre)}}</strong></h2>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h3 class="card-title"><span class="text-success">FECHA APROBACION:</span> <br>
-                                                        @if(Str::of($urbanizacion->urb_fecha_aprobacion)->trim()->isEmpty())
-                                                        <small>[No definido]</small>
-                                                        @else
-                                                        {{$urbanizacion->urb_fecha_aprobacion}}
-                                                        @endif
-                                                    </h3>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <h3 class="card-title"><span class="text-success">LEY MUNICIPAL:</span> <br>
-                                                        @if(Str::of($urbanizacion->urb_ley)->trim()->isEmpty())
-                                                        <small>[No definido]</small>
-                                                        @else
-                                                        {{$urbanizacion->urb_ley}}
-                                                        @endif
-                
-                                                    </h3>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h3 class="card-title"><span class="text-success">MANZANOS:</span> <br>{{$urbanizacion->manzanos->count();}}</h3>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <h3 class="card-title"><span class="text-success">TOTAL LOTES:</span> <br>{{$urbanizacion->lotes->count();}}</h3>
-                                                </div>
-                                            </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
                             <!-- fin card  -->
-                            <h3 class="text-primary">
-                                <i class="fa fa-flag"></i>
-                                ESTADO DE PROPIEDADES
-                            </h3>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <!-- inicio card  -->
-                                    <div class="card card-stat">
-                                        <div class="card-body text-center">
-                                            <h1 class="text-stat text-success">34</h1>
-                                            <h5>EN PAGOS</h5>
-                                        </div>
-                                    </div>
-                                    <!-- fin card  -->
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- inicio card  -->
-                                    <div class="card card-stat">
-                                        <div class="card-body text-center">
-                                            <h1 class="text-stat text-success">5</h1>
-                                            <h5>VENDIDO</h5>
-                                        </div>
-                                    </div>
-                                    <!-- fin card  -->
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- inicio card  -->
-                                    <div class="card card-stat">
-                                        <div class="card-body text-center">
-                                            <h1 class="text-stat text-success">9</h1>
-                                            <h5>OTRO</h5>
-                                        </div>
-                                    </div>
-                                    <!-- fin card  -->
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- inicio card  -->
-                                    <div class="card card-stat">
-                                        <div class="card-body text-center">
-                                            <h1 class="text-stat text-success">7</h1>
-                                            <h5>EN PAGOS</h5>
-                                        </div>
-                                    </div>
-                                    <!-- fin card  -->
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
                     <h3 class="subtitle-header"><i class="fa fa-apple"></i>
                         MANZANOS
-                        <a href="{{url('manzanos/nuevo/urb/'.$urbanizacion->urb_id)}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO MANZANO</a>
+                        <a href="{{url('manzanos/nuevo/urb/'.1)}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO MANZANO</a>
                     </h3>
                     <!-- inicio card  -->
-                    <div class="card card-stat">
-                        <div class="card-body">
-                            @if($urbanizacion->manzanos->count() == 0)
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Nota.-</h5>
-                                        <p>
-                                            La urbanización NO tiene manzanos registrados todavía. 
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @else
-                            <table class="table table-bordered tabla-datos">
-                                <thead>
-                                <tr>
-                                    <th>NOMBRE</th>
-                                    <th>NRO LOTES</th>
-                                    <th>ULTIMA ACTUALIZACION</th>
-                                    <th>OPCION</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($urbanizacion->manzanos as $item)
-                                <tr>
-                                    <td>{{$item->man_nombre}}</td>
-                                    <td>{{$item->lotes->count()}}</td>
-                                    <td>{{$item->updated_at}}</td>
-                                    <td>
-                                        <div class="dropdown">
-                                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            OPCION
-                                          </button>
-                                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="{{url('manzanos/'.Crypt::encryptString($item->man_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
-                                            <a class="dropdown-item btn-eliminar-manzano" data-item_descripcion="{{$item->man_nombre}}" data-cantlot="{{$item->lotes->count()}}" data-manid="{{$item->man_id}}" data-toggle="modal" data-target="#modal-eliminar-manzano" href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                          </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                        </div>
-                    </div>
                     <!-- fin card  -->
                 </div>
                 <div class="tab-pane fade" id="v-documents" role="tabpanel" aria-labelledby="v-documents">
                     <h3 class="subtitle-header"><i class="fa fa-folder-open"></i>
                         DOCUMENTOS ADJUNTOS - URBANIZACION
-                        <a href="{{url('urbanizaciones/'.Crypt::encryptString($urbanizacion->urb_id).'/nuevo_adjunto')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO DOCUMENTO ADJUNTO</a>
+                        <a href="{{url('urbanizaciones/'.Crypt::encryptString('a').'/nuevo_adjunto')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO DOCUMENTO ADJUNTO</a>
                     </h3>
                     <!-- inicio card  -->
-                    <div class="card card-stat">
-                        <div class="card-body">
-                            @if($urbanizacion->adjuntos->count() == 0)
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Nota.-</h5>
-                                        <p>
-                                            La urbanización NO tiene documentos adjuntos registrados todavía. 
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @else
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th class="text-center">DESCRIPCION DEL DOCUMENTO</th>
-                                    <th class="text-center">ENLACE</th>
-                                    <th class="text-center">FECHA Y HORA DE CARGA</th>
-                                    <th class="text-center">OPCION</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($urbanizacion->adjuntos as $item)
-                                <tr>
-                                    <td class="text-center">{{$item->adu_descripcion}}</td>
-                                    <td class="text-center">
-                                        <a target="_blank" href="{{asset('storage/'.$item->adu_ruta)}}" class="btn btn-sm btn-link">
-                                            <i class="fa fa-file"></i> Ver documento
-                                        </a>
-                                    </td>
-                                    <td class="text-center">
-                                        {{$item->updated_at}}
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="dropdown">
-                                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            OPCION
-                                          </button>
-                                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item btn-eliminar-adjunto" data-apo-id="{{Crypt::encryptString($item->adu_id)}}" data-apo-descripcion="{{$item->adu_descripcion}}" data-toggle="modal" data-target="#modal-eliminar-adjunto" href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                          </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                        </div>
-                    </div>
                     <!-- fin card  -->
                 </div>
+
                 <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
                     <h3 class="subtitle-header"><i class="fa fa-building"></i>
                         LOTES
-                        <a href="{{url('lotes/nuevo/urb/'.$urbanizacion->urb_id)}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO LOTE</a>
+                        <a href="{{url('lotes/nuevo/urb/')}}" class="btn btn-sm btn-success float-right" style="margin-left:10px;"><i class="fa fa-plus"></i> NUEVO LOTE</a>
                     </h3>
                     <!-- inicio card  -->
-                    <div class="card card-stat">
-                        <div class="card-body">
-                            @if($urbanizacion->lotes->count() == 0)
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Nota.-</h5>
-                                        <p>
-                                            La urbanización NO tiene lotes registrados todavía. 
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            @else
-                            <table class="table table-bordered tabla-datos-lotes">
-                                <thead>
-                                    <tr>
-                                        <th>NRO LOTE</th>
-                                        <th>CODIGO</th>
-                                        <th>ESTADO</th>
-                                        <th>ULTIMA ACTUALIZACION</th>
-                                        <th>OPCION</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($urbanizacion->lotes as $item)
-                                    <tr>
-                                        <td>{{$item->lot_nro}}</td>
-                                        <td>{{$item->lot_codigo}}</td>
-                                        <td>{{$item->propiedad->estados->first()->estado->edi_estado}}</td>
-                                        <td>{{$item->updated_at}}</td>
-                                        <td>
-                                            {{-- <a href="{{url('lotes/'.Crypt::encryptString($item->lot_id))}}" class="btn btn-secondary" type="button" id="lnk_gestionar_componente">
-                                                <i class="fa fa-cog"></i>
-                                                Administrar lote
-                                            </a> --}}
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                  OPCION
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                      <a class="dropdown-item" href="{{url('lotes/'.Crypt::encryptString($item->lot_id))}}"><i class="fa fa-cog"></i> Administrar lote</a>
-                                                      <div class="dropdown-divider"></div>
-                                                      <a class="dropdown-item" href="{{url('lotes/'.Crypt::encryptString($item->lot_id).'/editar')}}"><i class="fa fa-edit"></i> Editar</a>
-                                                      {{-- ESTADOS: {{count($item->propiedad->estados)}}
-                                                      ADJUNTOS: {{count($item->propiedad->adjuntos)}}
-                                                      RESERVAS: {{count($item->propiedad->reservas)}}
-                                                      CONTRATOSs: {{count($item->propiedad->contratos)}} --}}
-                                                      @if(count($item->propiedad->estados) == 1 && count($item->propiedad->adjuntos) == 0 && count($item->propiedad->reservas) == 0 && count($item->propiedad->contratos) == 0)
-                                                      <a class="dropdown-item btn-eliminar-lote" data-lot-id="{{Crypt::encryptString($item->lot_id)}}" data-lot-descripcion="{{$item->lot_codigo}}" data-toggle="modal" data-target="#modal-eliminar-lote" href="#" href="#"><i class="fa fa-trash"></i> Eliminar</a>
-                                                      @else 
-                                                      <a class="dropdown-item" href="#" title="No es posible eliminar este lote. Es posible que tenga documentos adjuntos, reservas o contratos asociados."><i class="fa fa-trash"></i> Eliminar</a>
-                                                      @endif
-                                                </div>
-                                            </div>
-                                          </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @endif
-                        </div>
-                    </div>
                     <!-- fin card  -->
-                </div>
-                <div class="tab-pane fade show active" id="v-mapas" role="tabpanel" aria-labelledby="v-mapas">
-                    <h3 class="subtitle-header"><i class="fa fa-map"></i>
-                        PLANOS GEOLOCALIZADOS
-                    </h3>
-                    <div class="card card-stat">
-                        <div class="card-body">
-                            @if($urbanizacion->urb_plano_geojson == null)
-                            <div class="alert alert-info">
-                                <div class="media">
-                                    <img src="{{asset('img/alert-info.png')}}" class="align-self-center mr-3" alt="...">
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Nota.-</h5>
-                                        <p>
-                                            La urbanización NO tiene cargado planos georeferenciados. El archivo del plano debe estar en formato GEOJSON.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <button data-toggle="modal" data-target="#modal-cargar-geojson" class="btn btn-primary"><i class="fa fa-map"></i> Cargar planos georeferenciados</button>
-                            @else
-                            {{-- <h4>PLANO DE LOTES GEOLOCALIZADOS</h4> --}}
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="mapa-inicial" style="height: 480px;"></div>
-                                    <input type="hidden" id="data-map-inicial" value="{{$urbanizacion->urb_plano_geojson}}">
-                                </div>
-                            </div>
-        
-                            @endif
-                        </div>    
-                    </div>        
                 </div>
             </div>
         </div>

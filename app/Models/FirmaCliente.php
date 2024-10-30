@@ -15,7 +15,7 @@ class FirmaCliente extends Model
     METODOS PARA RELACIONES
     ------------------------------------------------------------------------
      */
-    public function clientes(){
+    public function cliente(){
         return $this->belongsTo(Cliente::class, 'cli_id');
     }
     public function contrato(){

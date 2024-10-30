@@ -15,7 +15,7 @@ class FirmaPropietarioLegal extends Model
     METODOS PARA RELACIONES
     ------------------------------------------------------------------------
      */
-    public function propietarios_legales(){
+    public function propietario_legal(){
         return $this->belongsTo(Propietario_legal::class, 'ple_id');
     }
     public function contrato(){

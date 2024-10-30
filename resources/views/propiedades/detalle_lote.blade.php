@@ -14,8 +14,8 @@
         <div class="col-md-12" style="padding-right:0; border-right:2px solid #0d4a9a;">
             <div class="nav nav-pills" id="v-pills-tab">
                 <a class="nav-link active" id="v-general-tab" data-toggle="pill" href="#v-general" role="tab" aria-controls="v-general" aria-selected="false"><i class="fa fa-database"></i> Datos generales</a>
-                {{-- <a class="nav-link" id="v-modalidad-tab" data-toggle="pill" href="#v-modalidad" role="tab" aria-controls="v-modalidad" aria-selected="false"><i class="fa fa-tags"></i> Modalidad venta </a>
-                <a class="nav-link" id="v-disponibilidad-tab" data-toggle="pill" href="#v-disponibilidad" role="tab" aria-controls="v-disponibilidad" aria-selected="false"><i class="fa fa-check"></i> Estados</a> --}}
+                <a class="nav-link" id="v-modalidad-tab" data-toggle="pill" href="#v-modalidad" role="tab" aria-controls="v-modalidad" aria-selected="false"><i class="fa fa-tags"></i> Modalidad venta </a>
+                <a class="nav-link" id="v-disponibilidad-tab" data-toggle="pill" href="#v-disponibilidad" role="tab" aria-controls="v-disponibilidad" aria-selected="false"><i class="fa fa-check"></i> Estados</a>
                 <a class="nav-link" id="v-propietarios-tab" data-toggle="pill" href="#v-propietarios" role="tab" aria-controls="v-propietarios" aria-selected="true"><i class="fa fa-users"></i> Propietarios</a>
                 {{-- <a class="nav-link" id="v-contratos-tab" data-toggle="pill" href="#v-contratos" role="tab" aria-controls="v-contratos" aria-selected="false"><i class="fa fa-file"></i> Contratos</a> --}}
                 <a class="nav-link" id="v-adjuntos-tab" data-toggle="pill" href="#v-adjuntos" role="tab" aria-controls="v-adjuntos" aria-selected="false"><i class="fa fa-folder-open"></i> Documentos adjuntos</a>
@@ -93,10 +93,10 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <h5 class="card-title"><span class="text-success">ANCHO DE VIA (m<sup>2</sup>):</span> <br>
-                                                        @if(Str::of($lote->ancho_via)->trim()->isEmpty())
+                                                        @if(Str::of($lote->lot_ancho_via)->trim()->isEmpty())
                                                         <small>[No definido]</small>
                                                         @else
-                                                        {{$lote->ancho_via}}
+                                                        {{$lote->lot_ancho_via}}
                                                         @endif
                                                     </h5>
                                                 </div>

@@ -383,3 +383,9 @@ CSS para IMPRESIONES
 .tr-little{
   font-size: 12px;
 }
+
+.alert-documento{
+  padding:0px !important;
+  margin:3px !important;
+  font-size:0.9rem;
+}
